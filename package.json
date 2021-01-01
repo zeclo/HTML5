@@ -1,0 +1,43 @@
+{
+  "name": "html5",
+  "version": "0.1.0",
+  "description": "this is a test package",
+  "main": "index.js",
+  "dependencies": {
+    "@types/node": "^14.14.9",
+    "csv-parse": "^4.14.1",
+    "fs": "0.0.1-security",
+    "fs-extra": "^9.0.1",
+    "jsonfile": "^6.1.0",
+    "pixi.js": "^5.3.3",
+    "tslint": "^6.1.3",
+    "tslint-config-airbnb": "^5.11.2",
+    "typedoc": "^0.19.2",
+    "typescript": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/pixi.js": "^5.0.0",
+    "ts-loader": "^8.0.7",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc -p .",
+    "tslint": "tslint -p .",
+    "typedoc": "typedoc -p .",
+    "webpack": "webpack",
+    "server": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeclo/HTML5.git"
+  },
+  "author": "Zetta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zeclo/HTML5/issues"
+  },
+  "homepage": "https://github.com/zeclo/HTML5#readme"
+}
