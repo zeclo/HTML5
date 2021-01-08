@@ -58,3 +58,62 @@ vbWhite
 0xFFFFFF
 白
  
+
+■サーバサイドからJSONの読み込み(動作しない)■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+let rsGetJSON = '';
+function getJSON(url:string){
+    fetch(url) //非同期処理に注意。チェーンメソッドを利用。
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(json) {
+            //var json = JSON.parse(JSON.stringify( data ));
+            //alert(json);
+            alert(json);
+            rsGetJSON = json;
+        })
+        .catch((error) => {
+            alert('Error:'+ error);
+        }); 
+}
+
+■アニメーション処理■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//app.ticker.add(animate);
+        let amountTime = 0;
+
+        // 処理の定義
+        function animate(delta) {
+            // ぶたがはまってる円を左右に動かす(適当なのでほっとくとどんどんずれていきます)
+            //amountTime += delta;                    // delta(app.ticker.deltaTime) : 前のフレームから今のフレームまでの経過時間を正規化した値？
+            amountTime += app.ticker.deltaMS;    // app.ticker.deltaMS  : 前のフレームから今のフレームまでの経過時間(ms)
+
+            if (amountTime >= 1000) {
+                // 右に動かす
+                alert("1秒たったぜ！" +amountTime);
+                amountTime = 0
+                //スプライトに対して処理も可能
+                //aAnswerSprite.x = 100;       
+            }
+            else {
+                // 左に動かす
+                //circle.x -= 2;
+            }
+        }
+■■■■ボタンのz値を変化させる■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+            let sampleContainer = new PIXI.Container();
+            let a1 = new PIXI.Sprite(PIXI.Texture.from('/assets/次へボタン.png'));  
+            let a2 = new PIXI.Sprite(PIXI.Texture.from('/assets/次へボタン2.png'));    
+            sampleContainer.addChild(a1);
+            sampleContainer.addChild(a2);
+            app.stage.addChild(sampleContainer);
+            sampleContainer.x = 600
+            sampleContainer.y = 400
+
+            sampleContainer.sortableChildren = true;
+            // (どのオブジェクトもzIndexの初期値は0)
+            //a1.zIndex = 10;
+            sampleContainer.removeChildAt(sampleContainer.children.length-1);
+
+            app.stage.sortableChildren = true;
+            sampleContainer.zIndex = -1;
