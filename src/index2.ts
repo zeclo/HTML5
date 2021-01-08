@@ -53,8 +53,8 @@ function initScenario(){
         setScore();
 
         //メッセージ→なし
+
         //キャラクタ→csv全体でどんなキャラがいるかを確認
-        
         //キャラ画像を配置する
         let unitSpaceWidth = contenarList['aCharacterSprite'].width / (Object.keys(charIDList).length + 1);
         unitSpaceWidth = parseInt(String(unitSpaceWidth));
@@ -238,6 +238,20 @@ function initSprite (obj:PIXI.Sprite, anchorX:number, anchorY:number, x:number, 
     obj.y = y;
 }
 
+function initDefText (contenerName:string,　text:string, x:number, y:number){
+    contenarList[contenerName] =  new PIXI.Text(text, 
+        { 
+            //   fontFamily: 'Arial',   // フォント
+            fontSize: 20,
+            fill : 0x000000,       // 文字色
+            //   stroke: 0x000000,      // アウトラインの色
+            //   strokeThickness: 3,    // アウトラインの太さ   
+            //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+        });
+    contenarList[contenerName].x = x;
+    contenarList[contenerName].y = y;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     //このイベントを追加することでonloadの前にリソース読み取りが完了する
     // 現在、以下アラートを除くと画像読取りが表示に間に合わなくなる
@@ -288,11 +302,6 @@ window.onload = () => {
         .add('/assets/ANS-Back.png')
 
         .load(onAssetsLoaded2);
-    
-
-    //alert("テストおぉぉぉぉぉぉぉ→この処理はload(onAssetsLoaded2)より早く実行される");
-
-
 
     //★読み込んだ画像データをテクスチャ(アプリ上でインスタンス化)に登録
     // onAssetsLoaded handler builds the example.
@@ -300,11 +309,8 @@ window.onload = () => {
        try {
             //【スコア】(aScore)
             let aScore = PIXI.Texture.from('/assets/0score.png');
-            contenarList['aScoreSprite'] = new PIXI.Sprite(aScore);    
-            contenarList['aScoreSprite'].anchor.x = 0;
-            contenarList['aScoreSprite'].anchor.y = 0;
-            contenarList['aScoreSprite'].x = 0;       
-            contenarList['aScoreSprite'].y = 0;      
+            contenarList['aScoreSprite'] = new PIXI.Sprite(aScore);   
+            initSprite(contenarList['aScoreSprite'],0,0,0,0);
             app.stage.addChild(contenarList['aScoreSprite']);
         
             contenarList['aScoreText'] =  new PIXI.Text('0点', 
@@ -324,11 +330,8 @@ window.onload = () => {
 
             //会話(aMessage)
             let aMessage = PIXI.Texture.from('/assets/メッセージ.png');
-            contenarList['aMessageSprite'] = new PIXI.Sprite(aMessage);    
-            contenarList['aMessageSprite'].anchor.x = 0;
-            contenarList['aMessageSprite'].anchor.y = 0;
-            contenarList['aMessageSprite'].x = 0;       
-            contenarList['aMessageSprite'].y = 50;      
+            contenarList['aMessageSprite'] = new PIXI.Sprite(aMessage);  
+            initSprite(contenarList['aMessageSprite'],0,0,0,50);   
             app.stage.addChild(contenarList['aMessageSprite']);
 
             contenarList['aMessageText'] =  new PIXI.Text('100点', 
@@ -366,10 +369,7 @@ window.onload = () => {
             //回答欄(aAnswer)
             let aAnswer = PIXI.Texture.from('/assets/回答欄.png');
             contenarList['aAnswerSprite'] = new PIXI.Sprite(aAnswer);    
-            contenarList['aAnswerSprite'].anchor.x = 0;
-            contenarList['aAnswerSprite'].anchor.y = 0;
-            contenarList['aAnswerSprite'].x = 0;       
-            contenarList['aAnswerSprite'].y = 350;      
+            initSprite(contenarList['aAnswerSprite'],0,0,0,350);  
             app.stage.addChild(contenarList['aAnswerSprite']);
 
 
@@ -519,13 +519,7 @@ window.onload = () => {
             //次へボタン(aAnswer)
             let aNextButton = PIXI.Texture.from('/assets/次へボタン.png');
             contenarList['aNextButtonSprite']  = new PIXI.Sprite(aNextButton);    
-            
             initSprite(contenarList['aNextButtonSprite'],0,0,670,160);
-            
-            // contenarList['aNextButtonSprite'] .anchor.x = 0;
-            // contenarList['aNextButtonSprite'] .anchor.y = 0;
-            // contenarList['aNextButtonSprite'] .x = 670;       
-            // contenarList['aNextButtonSprite'] .y = 160;
             contenarList['aNextButtonSprite'].interactive = true;
             contenarList['aNextButtonSprite'].buttonMode = true;
             contenarList['aNextButtonSprite'].on('pointertap',tapNext);    
