@@ -18,7 +18,7 @@ function getCSVCellData(rowIndex:number, columnIndex:number){
 
 let currentStep = 0;
 let currentScore = 0;
-let contenarList = { init:'初期値' };
+let ctnrLi = { init:'初期値' };
 let charImgList = {};
 let charIDList = {};
 let characterArr = {};
@@ -56,7 +56,7 @@ function initScenario(){
 
         //キャラクタ→csv全体でどんなキャラがいるかを確認
         //キャラ画像を配置する
-        let unitSpaceWidth = contenarList['aCharacterSprite'].width / (Object.keys(charIDList).length + 1);
+        let unitSpaceWidth = ctnrLi['aCharacterSprite'].width / (Object.keys(charIDList).length + 1);
         unitSpaceWidth = parseInt(String(unitSpaceWidth));
 
         let currentX = 0;
@@ -72,24 +72,24 @@ function initScenario(){
                     let aMessage = PIXI.Texture.from('/assets/char/' +key2+ '.png');
                     characterArr[key2] = new PIXI.Sprite(aMessage);    
                     characterArr[key2].x = unitSpaceWidth * currentX-parseInt(String(characterArr[key2].width / 2));       
-                    characterArr[key2].y = contenarList['aCharacterSprite'].height - characterArr[key2].height;      
+                    characterArr[key2].y = ctnrLi['aCharacterSprite'].height - characterArr[key2].height;      
                     characterArr[key2].visible = false;
 
-                    contenarList['aCharacterContainer'].addChild(characterArr[key2]);
-                    contenarList[key2] = characterArr[key2]; 
+                    ctnrLi['aCharacterContainer'].addChild(characterArr[key2]);
+                    ctnrLi[key2] = characterArr[key2]; 
                 }
             }
             characterArr[key].visible = true;
         }
 
         //【回答欄】なし
-        contenarList['answerListContainer'].visible = false;
-        contenarList['okSp'].visible = false;
-        contenarList['ngSp'].visible = false;
-        contenarList['noneSp'].visible = true;
+        ctnrLi['answerListContainer'].visible = false;
+        ctnrLi['okSp'].visible = false;
+        ctnrLi['ngSp'].visible = false;
+        ctnrLi['noneSp'].visible = true;
 
         //【次へボタン】非表示
-        contenarList['aNextButtonSprite'].zIndex = -1;
+        ctnrLi['aNextButtonSprite'].zIndex = -1;
 
     }catch (error) {
         alert("エラーが出たぜ　" + error);
@@ -105,21 +105,21 @@ function readStep(){
 
     //【スコア】変化なし
     //【メッセージ】csvから読み取り
-    contenarList['aMessageText'].text = getCSVCellData(currentStep+1,3).replace(/"/g, '');
+    ctnrLi['aMessageText'].text = getCSVCellData(currentStep+1,3).replace(/"/g, '');
     
     //【キャラクタ】感情付きの画像があれば表示 
     if (getCSVCellData(currentStep+1,6) === "") {
         //次へボタンを表示
-        contenarList['aNextButtonSprite'].zIndex = 10;
-        contenarList['aNextButtonSprite'].visible = true;
+        ctnrLi['aNextButtonSprite'].zIndex = 10;
+        ctnrLi['aNextButtonSprite'].visible = true;
 
-        contenarList['answerListContainer'].visible = false;
-        contenarList['okSp'].visible = false;
-        contenarList['ngSp'].visible = false;
-        contenarList['noneSp'].visible = true;
+        ctnrLi['answerListContainer'].visible = false;
+        ctnrLi['okSp'].visible = false;
+        ctnrLi['ngSp'].visible = false;
+        ctnrLi['noneSp'].visible = true;
     } else {
         //【次へボタン】非表示
-        contenarList['aNextButtonSprite'].visible = false;
+        ctnrLi['aNextButtonSprite'].visible = false;
         //todo回答欄→csvから読み取り→回答をランダムに配置して、各イベントを紐付け
         let answerList = [];
         let okList = getCSVCellData(currentStep+1,6).replace(/"/g, '').split('/');
@@ -134,39 +134,39 @@ function readStep(){
         
 
         //回答コンテナをActiveに
-        contenarList['answerListContainer'].visible = true;
-        contenarList['okSp'].visible = false;
-        contenarList['ngSp'].visible = false;
-        contenarList['noneSp'].visible = false;
+        ctnrLi['answerListContainer'].visible = true;
+        ctnrLi['okSp'].visible = false;
+        ctnrLi['ngSp'].visible = false;
+        ctnrLi['noneSp'].visible = false;
         
         //選択肢スプライトにテキスト入力
         //全ての選択肢スプライトのイベントを削除→NGをセット 
-        contenarList['ans1Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans1Sp'].on('pointertap',anserNG);
-        contenarList['ans2Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans2Sp'].on('pointertap',anserNG); 
-        contenarList['ans3Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans3Sp'].on('pointertap',anserNG); 
-        contenarList['ans4Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans4Sp'].on('pointertap',anserNG); 
-        contenarList['ans5Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans5Sp'].on('pointertap',anserNG); 
-        contenarList['ans6Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-        contenarList['ans6Sp'].on('pointertap',anserNG);   
+        ctnrLi['ans1Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans1Sp'].on('pointertap',anserNG);
+        ctnrLi['ans2Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans2Sp'].on('pointertap',anserNG); 
+        ctnrLi['ans3Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans3Sp'].on('pointertap',anserNG); 
+        ctnrLi['ans4Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans4Sp'].on('pointertap',anserNG); 
+        ctnrLi['ans5Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans5Sp'].on('pointertap',anserNG); 
+        ctnrLi['ans6Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+        ctnrLi['ans6Sp'].on('pointertap',anserNG);   
 
         clearAnswerList();
         
         //正解の選択肢スプライトにOKイベントをセット
         for (let i=0; i<answerList.length; i++) {
-            contenarList['ans' + String(i+1)+ 'TextSp'].text = answerList[i][2];
+            ctnrLi['ans' + String(i+1)+ 'TextSp'].text = answerList[i][2];
             if(answerList[i][1] === 'ok'){
-                contenarList['ans' + String(i+1)+ 'Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
-                contenarList['ans' + String(i+1)+ 'Sp'].on('pointertap',anserOK);  
+                ctnrLi['ans' + String(i+1)+ 'Sp'].off('pointertap'); //第2引数にメソッド名を指定すれば個別削除可能 
+                ctnrLi['ans' + String(i+1)+ 'Sp'].on('pointertap',anserOK);  
             }
         }
     }
     //吹き出しの位置を語り手の頭上へ表示
-    contenarList['aCommentEdgeSprite'].x = characterArr[charImgList[getCSVCellData(currentStep+1,2)]].x -10;
+    ctnrLi['aCommentEdgeSprite'].x = characterArr[charImgList[getCSVCellData(currentStep+1,2)]].x -10;
 
     //キャラ画像を感情IDに従って変更
     setVisibleImg(charImgList[getCharImgFileName( getCSVCellData(currentStep+1,2).replace(/"/g, ''),getCSVCellData(currentStep+1,5).replace(/"/g, ''))]);
@@ -176,10 +176,10 @@ function readStep(){
 
 function anserOK(){ 
     //ボタン制御
-    contenarList['answerListContainer'].visible = false;
-    contenarList['okSp'].visible = true;
-    contenarList['ngSp'].visible = false;
-    contenarList['noneSp'].visible = false;
+    ctnrLi['answerListContainer'].visible = false;
+    ctnrLi['okSp'].visible = true;
+    ctnrLi['ngSp'].visible = false;
+    ctnrLi['noneSp'].visible = false;
     
     //スコア加算
     currentScore = currentScore + 10;
@@ -188,10 +188,10 @@ function anserOK(){
 
 function anserNG(){ 
     //ボタン制御
-    contenarList['answerListContainer'].visible = false;
-    contenarList['okSp'].visible = false;
-    contenarList['ngSp'].visible = true;
-    contenarList['noneSp'].visible = false;
+    ctnrLi['answerListContainer'].visible = false;
+    ctnrLi['okSp'].visible = false;
+    ctnrLi['ngSp'].visible = true;
+    ctnrLi['noneSp'].visible = false;
 }
 
 function tapOK(){ 
@@ -199,10 +199,10 @@ function tapOK(){
 }
 
 function tapNG(){ 
-    contenarList['answerListContainer'].visible = true;
-    contenarList['okSp'].visible = false;
-    contenarList['ngSp'].visible = false;
-    contenarList['noneSp'].visible = false;
+    ctnrLi['answerListContainer'].visible = true;
+    ctnrLi['okSp'].visible = false;
+    ctnrLi['ngSp'].visible = false;
+    ctnrLi['noneSp'].visible = false;
 }
 
 function tapNext(){ 
@@ -210,16 +210,16 @@ function tapNext(){
 }
 
 function setScore(){
-    contenarList['aScoreText'].text = 'スコア' + currentScore + '点';
+    ctnrLi['aScoreText'].text = 'スコア' + currentScore + '点';
 }
 
 function clearAnswerList(){
-    contenarList['ans1TextSp'].text = '①';
-    contenarList['ans2TextSp'].text = '②';
-    contenarList['ans3TextSp'].text = '③';
-    contenarList['ans4TextSp'].text = '④';
-    contenarList['ans5TextSp'].text = '⑤';
-    contenarList['ans6TextSp'].text = '⑥';
+    ctnrLi['ans1TextSp'].text = '①';
+    ctnrLi['ans2TextSp'].text = '②';
+    ctnrLi['ans3TextSp'].text = '③';
+    ctnrLi['ans4TextSp'].text = '④';
+    ctnrLi['ans5TextSp'].text = '⑤';
+    ctnrLi['ans6TextSp'].text = '⑥';
 }
 
 function getCharImgFileName (charactorID, emotionID){
@@ -230,16 +230,28 @@ function getCharImgFileName (charactorID, emotionID){
     }
 }
 
-function initSprite (obj:PIXI.Sprite, anchorX:number, anchorY:number, x:number, y:number) {
-    //次へボタン(aAnswer)
-    obj.anchor.x = anchorX;
-    obj.anchor.y = anchorY;
-    obj.x = x;
-    obj.y = y;
+function initSprite (contName:string, imgFilePath:string
+    , anchorX:number, anchorY:number, x:number, y:number) {
+        ctnrLi[contName] 
+        = new PIXI.Sprite(PIXI.Texture.from(imgFilePath)); 
+        ctnrLi[contName].anchor.x = anchorX;
+        ctnrLi[contName].anchor.y = anchorY;
+        ctnrLi[contName].x = x;
+        ctnrLi[contName].y = y;
 }
 
-function initText (contenerName:string,　text:string, fontSize:number, x:number, y:number){
-    contenarList[contenerName] =  new PIXI.Text(text, 
+function initBtn (contName:string, imgFilePath:string
+    , x:number, y:number) {
+        ctnrLi[contName] 
+        = new PIXI.Sprite(PIXI.Texture.from(imgFilePath)); 
+        ctnrLi[contName].x = x;
+        ctnrLi[contName].y = y;
+        ctnrLi[contName].interactive = true;
+        ctnrLi[contName].buttonMode = true;
+}
+
+function initTxt (contenerName:string,　text:string, fontSize:number, x:number, y:number){
+    ctnrLi[contenerName] =  new PIXI.Text(text, 
         { 
             //   fontFamily: 'Arial',   // フォント
             fontSize: fontSize,
@@ -248,8 +260,8 @@ function initText (contenerName:string,　text:string, fontSize:number, x:number
             //   strokeThickness: 3,    // アウトラインの太さ   
             //   align: 'center',       // 文字揃え(複数行の場合に有効)     
         });
-    contenarList[contenerName].x = x;
-    contenarList[contenerName].y = y;
+    ctnrLi[contenerName].x = x;
+    ctnrLi[contenerName].y = y;
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -289,7 +301,7 @@ window.onload = () => {
     app.loader
         .add('/assets/0score.png')
         .add('/assets/メッセージ.png')
-        .add('/assets/キャラクタ.png')
+        .add('/assets/キャラクタエリア.png')
         .add('/assets/回答欄.png')
         .add('/assets/次へボタン.png')
         .add('/assets/サンプル.png')
@@ -308,135 +320,86 @@ window.onload = () => {
     function onAssetsLoaded2() {
        try {
             //【スコア】(aScore)
-            let aScore = PIXI.Texture.from('/assets/0score.png');
-            contenarList['aScoreSprite'] = new PIXI.Sprite(aScore);   
-            initSprite(contenarList['aScoreSprite'],0,0,0,0);
-            app.stage.addChild(contenarList['aScoreSprite']);
-        
-            initText('aScoreText','0点',40,10,5);
+            initSprite('aScoreSprite' ,'/assets/0score.png', 0,0,0,0);
+            app.stage.addChild(ctnrLi['aScoreSprite']);
+            initTxt('aScoreText','0点',40,10,5);
+            app.stage.addChild(ctnrLi['aScoreText']);
             
-            app.stage.addChild(contenarList['aScoreText']);
-            
-
             //会話(aMessage)
-            let aMessage = PIXI.Texture.from('/assets/メッセージ.png');
-            contenarList['aMessageSprite'] = new PIXI.Sprite(aMessage);  
-            initSprite(contenarList['aMessageSprite'],0,0,0,50);   
-            app.stage.addChild(contenarList['aMessageSprite']);
-
-            initText('aMessageText','100点',40,30,70);
-            
-            app.stage.addChild(contenarList['aMessageText']);
+            initSprite('aMessageSprite','/assets/メッセージ.png',0,0,0,50);   
+            app.stage.addChild(ctnrLi['aMessageSprite']);
+            initTxt('aMessageText','100点',40,30,70);
+            app.stage.addChild(ctnrLi['aMessageText']);
 
             //キャラクタ(aCharacter)
-            contenarList['aCharacterContainer']  = new PIXI.Container();
-            contenarList['aCharacterContainer'] .x = 0;       
-            contenarList['aCharacterContainer'] .y = 200;
-            app.stage.addChild(contenarList['aCharacterContainer'] );
+            ctnrLi['aCharacterContainer']  = new PIXI.Container();
+            ctnrLi['aCharacterContainer'] .x = 0;       
+            ctnrLi['aCharacterContainer'] .y = 200;
+            app.stage.addChild(ctnrLi['aCharacterContainer'] );
 
-            let aCharacter = PIXI.Texture.from('/assets/キャラクタ.png');
-            contenarList['aCharacterSprite'] = new PIXI.Sprite(aCharacter);        
-            contenarList['aCharacterContainer'] .addChild(contenarList['aCharacterSprite']);
+            initSprite('aCharacterSprite','/assets/キャラクタエリア.png',0,0,0,0);         
+            ctnrLi['aCharacterContainer'] .addChild(ctnrLi['aCharacterSprite']);
 
-            let aCommentEdge = PIXI.Texture.from('/assets/吹き出しの先.png');
-            contenarList['aCommentEdgeSprite'] = new PIXI.Sprite(aCommentEdge);  
-            contenarList['aCommentEdgeSprite'].x = 100
-            contenarList['aCommentEdgeSprite'].y = 0
-            contenarList['aCharacterContainer'] .addChild(contenarList['aCommentEdgeSprite']);
+            initSprite('aCommentEdgeSprite','/assets/吹き出しの先.png',0,0,100,0);         
+            ctnrLi['aCharacterContainer'] .addChild(ctnrLi['aCommentEdgeSprite']);
         
-
-
+            
             //回答欄(aAnswer)
-            let aAnswer = PIXI.Texture.from('/assets/回答欄.png');
-            contenarList['aAnswerSprite'] = new PIXI.Sprite(aAnswer);    
-            initSprite(contenarList['aAnswerSprite'],0,0,0,350);  
-            app.stage.addChild(contenarList['aAnswerSprite']);
-
+            initSprite('aAnswerSprite','/assets/回答欄.png',0,0,0,350);  
+            app.stage.addChild(ctnrLi['aAnswerSprite']);
 
             let answerContainer = new PIXI.Container();
-            contenarList['answerListContainer'] = new PIXI.Container();
-            contenarList['okSp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/OK.png'));  
-            contenarList['ngSp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/NG.png')); 
-            contenarList['noneSp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/NONE.png')); 
-            contenarList['ansBack'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS-Back.png'));  
-            contenarList['ans1Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png'));   
-            contenarList['ans2Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png')); 
-            contenarList['ans3Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png')); 
-            contenarList['ans4Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png')); 
-            contenarList['ans5Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png')); 
-            contenarList['ans6Sp'] = new PIXI.Sprite(PIXI.Texture.from('/assets/ANS.png')); 
+            ctnrLi['answerListContainer'] = new PIXI.Container();
             
-
-            contenarList['ans1Sp'].x = 10;       
-            contenarList['ans1Sp'].y = 10;
-            contenarList['ans1Sp'].interactive = true;
-            contenarList['ans1Sp'].buttonMode = true;
-            contenarList['ans2Sp'].x = 260;       
-            contenarList['ans2Sp'].y = 10;
-            contenarList['ans2Sp'].interactive = true;
-            contenarList['ans2Sp'].buttonMode = true;
-            contenarList['ans3Sp'].x = 510;       
-            contenarList['ans3Sp'].y = 10;
-            contenarList['ans3Sp'].interactive = true;
-            contenarList['ans3Sp'].buttonMode = true;
-            contenarList['ans4Sp'].x = 10;       
-            contenarList['ans4Sp'].y = 85;
-            contenarList['ans4Sp'].interactive = true;
-            contenarList['ans4Sp'].buttonMode = true;
-            contenarList['ans5Sp'].x = 260;       
-            contenarList['ans5Sp'].y = 85;
-            contenarList['ans5Sp'].interactive = true;
-            contenarList['ans5Sp'].buttonMode = true;
-            contenarList['ans6Sp'].x = 510;       
-            contenarList['ans6Sp'].y = 85;
-            contenarList['ans6Sp'].interactive = true;
-            contenarList['ans6Sp'].buttonMode = true;
-
-            contenarList['okSp'].interactive = true;
-            contenarList['okSp'].buttonMode = true;
-            contenarList['ngSp'].interactive = true;
-            contenarList['ngSp'].buttonMode = true;
-
-            contenarList['okSp'].on('pointertap',tapOK); 
-            contenarList['ngSp'].on('pointertap',tapNG); 
-
-            initText('ans1TextSp','①',20,contenarList['ans1Sp'].x + 5,contenarList['ans1Sp'].y + 10);
-            initText('ans2TextSp','②',20,contenarList['ans2Sp'].x + 5,contenarList['ans2Sp'].y + 10);
-            initText('ans3TextSp','③',20,contenarList['ans3Sp'].x + 5,contenarList['ans3Sp'].y + 10);
-            initText('ans4TextSp','④',20,contenarList['ans4Sp'].x + 5,contenarList['ans4Sp'].y + 10);
-            initText('ans5TextSp','④',20,contenarList['ans5Sp'].x + 5,contenarList['ans5Sp'].y + 10);
-            initText('ans6TextSp','⑥',20,contenarList['ans6Sp'].x + 5,contenarList['ans6Sp'].y + 10);
+            initSprite('noneSp','/assets/NONE.png',0,0,0,0);
+            initSprite('ansBack','/assets/ANS-Back.png',0,0,0,0);
             
-            contenarList['answerListContainer'].addChild(contenarList['ansBack']);
-            contenarList['answerListContainer'].addChild(contenarList['ans1Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans1TextSp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans2Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans2TextSp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans3Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans3TextSp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans4Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans4TextSp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans5Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans5TextSp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans6Sp']);
-            contenarList['answerListContainer'].addChild(contenarList['ans6TextSp']);
-            answerContainer.addChild(contenarList['answerListContainer']);
-            answerContainer.addChild(contenarList['okSp']);
-            answerContainer.addChild(contenarList['ngSp']);
-            answerContainer.addChild(contenarList['noneSp']);
+            initBtn('ans1Sp','/assets/ANS.png',10,10);
+            initBtn('ans2Sp','/assets/ANS.png',260,10);
+            initBtn('ans3Sp','/assets/ANS.png',510,10);
+            initBtn('ans4Sp','/assets/ANS.png',10,85);
+            initBtn('ans5Sp','/assets/ANS.png',260,85);
+            initBtn('ans6Sp','/assets/ANS.png',510,85);
+
+            initBtn('okSp','/assets/OK.png',0,0);
+            initBtn('ngSp','/assets/NG.png',0,0);
+
+            ctnrLi['okSp'].on('pointertap',tapOK); 
+            ctnrLi['ngSp'].on('pointertap',tapNG); 
+
+            initTxt('ans1TextSp','①',20,ctnrLi['ans1Sp'].x + 5,ctnrLi['ans1Sp'].y + 10);
+            initTxt('ans2TextSp','②',20,ctnrLi['ans2Sp'].x + 5,ctnrLi['ans2Sp'].y + 10);
+            initTxt('ans3TextSp','③',20,ctnrLi['ans3Sp'].x + 5,ctnrLi['ans3Sp'].y + 10);
+            initTxt('ans4TextSp','④',20,ctnrLi['ans4Sp'].x + 5,ctnrLi['ans4Sp'].y + 10);
+            initTxt('ans5TextSp','④',20,ctnrLi['ans5Sp'].x + 5,ctnrLi['ans5Sp'].y + 10);
+            initTxt('ans6TextSp','⑥',20,ctnrLi['ans6Sp'].x + 5,ctnrLi['ans6Sp'].y + 10);
+            
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ansBack']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans1Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans1TextSp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans2Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans2TextSp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans3Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans3TextSp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans4Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans4TextSp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans5Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans5TextSp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans6Sp']);
+            ctnrLi['answerListContainer'].addChild(ctnrLi['ans6TextSp']);
+            answerContainer.addChild(ctnrLi['answerListContainer']);
+            answerContainer.addChild(ctnrLi['okSp']);
+            answerContainer.addChild(ctnrLi['ngSp']);
+            answerContainer.addChild(ctnrLi['noneSp']);
             
             answerContainer.x = 0;       
             answerContainer.y = 350;  
             app.stage.addChild(answerContainer);
             
             //次へボタン(aAnswer)
-            let aNextButton = PIXI.Texture.from('/assets/次へボタン.png');
-            contenarList['aNextButtonSprite']  = new PIXI.Sprite(aNextButton);    
-            initSprite(contenarList['aNextButtonSprite'],0,0,670,160);
-            contenarList['aNextButtonSprite'].interactive = true;
-            contenarList['aNextButtonSprite'].buttonMode = true;
-            contenarList['aNextButtonSprite'].on('pointertap',tapNext);    
-            app.stage.addChild(contenarList['aNextButtonSprite'] );
+            initBtn('aNextButtonSprite','/assets/次へボタン.png',670,160);
+            ctnrLi['aNextButtonSprite'].on('pointertap',tapNext);    
+            app.stage.addChild(ctnrLi['aNextButtonSprite'] );
 
         }catch (error) {
             alert("エラーが出たぜ　" + error);
