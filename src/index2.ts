@@ -238,11 +238,11 @@ function initSprite (obj:PIXI.Sprite, anchorX:number, anchorY:number, x:number, 
     obj.y = y;
 }
 
-function initDefText (contenerName:string,　text:string, x:number, y:number){
+function initText (contenerName:string,　text:string, fontSize:number, x:number, y:number){
     contenarList[contenerName] =  new PIXI.Text(text, 
         { 
             //   fontFamily: 'Arial',   // フォント
-            fontSize: 20,
+            fontSize: fontSize,
             fill : 0x000000,       // 文字色
             //   stroke: 0x000000,      // アウトラインの色
             //   strokeThickness: 3,    // アウトラインの太さ   
@@ -313,18 +313,8 @@ window.onload = () => {
             initSprite(contenarList['aScoreSprite'],0,0,0,0);
             app.stage.addChild(contenarList['aScoreSprite']);
         
-            contenarList['aScoreText'] =  new PIXI.Text('0点', 
-                    { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 40,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                    });
-
-            contenarList['aScoreText'].x = 10;
-            contenarList['aScoreText'].y = 5;
+            initText('aScoreText','0点',40,10,5);
+            
             app.stage.addChild(contenarList['aScoreText']);
             
 
@@ -334,18 +324,8 @@ window.onload = () => {
             initSprite(contenarList['aMessageSprite'],0,0,0,50);   
             app.stage.addChild(contenarList['aMessageSprite']);
 
-            contenarList['aMessageText'] =  new PIXI.Text('100点', 
-                    { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 40,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                    });
-
-            contenarList['aMessageText'].x = 30;
-            contenarList['aMessageText'].y = 70;
+            initText('aMessageText','100点',40,30,70);
+            
             app.stage.addChild(contenarList['aMessageText']);
 
             //キャラクタ(aCharacter)
@@ -420,80 +400,13 @@ window.onload = () => {
             contenarList['okSp'].on('pointertap',tapOK); 
             contenarList['ngSp'].on('pointertap',tapNG); 
 
-            contenarList['ans1TextSp'] =  new PIXI.Text('①', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans1TextSp'].x = contenarList['ans1Sp'].x + 5;
-            contenarList['ans1TextSp'].y = contenarList['ans1Sp'].y + 10;
-
-            contenarList['ans2TextSp'] =  new PIXI.Text('②', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans2TextSp'].x = contenarList['ans2Sp'].x + 5;
-            contenarList['ans2TextSp'].y = contenarList['ans2Sp'].y + 10;
-
-            contenarList['ans3TextSp'] =  new PIXI.Text('③', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans3TextSp'].x = contenarList['ans3Sp'].x + 5;
-            contenarList['ans3TextSp'].y = contenarList['ans3Sp'].y + 10;
-
-            contenarList['ans4TextSp'] =  new PIXI.Text('④', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans4TextSp'].x = contenarList['ans4Sp'].x + 5;
-            contenarList['ans4TextSp'].y = contenarList['ans4Sp'].y + 10;
-
-            contenarList['ans5TextSp'] =  new PIXI.Text('⑤', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans5TextSp'].x = contenarList['ans5Sp'].x + 5;
-            contenarList['ans5TextSp'].y = contenarList['ans5Sp'].y + 10;
-
-            contenarList['ans6TextSp'] =  new PIXI.Text('⑥', 
-                { 
-                    //   fontFamily: 'Arial',   // フォント
-                    fontSize: 20,
-                    fill : 0x000000,       // 文字色
-                    //   stroke: 0x000000,      // アウトラインの色
-                    //   strokeThickness: 3,    // アウトラインの太さ   
-                    //   align: 'center',       // 文字揃え(複数行の場合に有効)     
-                });
-            contenarList['ans6TextSp'].x = contenarList['ans6Sp'].x + 5;
-            contenarList['ans6TextSp'].y = contenarList['ans6Sp'].y + 10;
+            initText('ans1TextSp','①',20,contenarList['ans1Sp'].x + 5,contenarList['ans1Sp'].y + 10);
+            initText('ans2TextSp','②',20,contenarList['ans2Sp'].x + 5,contenarList['ans2Sp'].y + 10);
+            initText('ans3TextSp','③',20,contenarList['ans3Sp'].x + 5,contenarList['ans3Sp'].y + 10);
+            initText('ans4TextSp','④',20,contenarList['ans4Sp'].x + 5,contenarList['ans4Sp'].y + 10);
+            initText('ans5TextSp','④',20,contenarList['ans5Sp'].x + 5,contenarList['ans5Sp'].y + 10);
+            initText('ans6TextSp','⑥',20,contenarList['ans6Sp'].x + 5,contenarList['ans6Sp'].y + 10);
             
-
-
             contenarList['answerListContainer'].addChild(contenarList['ansBack']);
             contenarList['answerListContainer'].addChild(contenarList['ans1Sp']);
             contenarList['answerListContainer'].addChild(contenarList['ans1TextSp']);
