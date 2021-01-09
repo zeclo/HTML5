@@ -16,12 +16,14 @@ function getCSVCellData(rowIndex:number, columnIndex:number){
     return rsGetCSV.split("\n")[rowIndex].split(',')[columnIndex]; 
 }
 
-let currentStep = 0;
+let currentStepIndex = 0;
 let currentScore = 0;
-let ctnrLi = { init:'初期値' };
+let ctnrLi = {};
 let charImgList = {};
 let charIDList = {};
 let characterArr = {};
+let stepData = {};
+
 
 getCSV('/scenario.csv');
 
@@ -98,17 +100,15 @@ function initScenario(){
 
 function readStep(){ 
     //alert("readStep開始");
-    //シナリオ,ステップ,キャラID,フレーズ日本語,フレーズ英語,反応,正解,選択肢
-    //1,1,A,"今日はいい天気だね","It's nice weather!","good",,,
-
+    
     //各スプライトの処理
 
     //【スコア】変化なし
     //【メッセージ】csvから読み取り
-    ctnrLi['aMessageText'].text = getCSVCellData(currentStep+1,3).replace(/"/g, '');
+    ctnrLi['aMessageText'].text = getCSVCellData(currentStepIndex+1,3).replace(/"/g, '');
     
     //【キャラクタ】感情付きの画像があれば表示 
-    if (getCSVCellData(currentStep+1,6) === "") {
+    if (getCSVCellData(currentStepIndex+1,6) === "") {
         //次へボタンを表示
         ctnrLi['aNextButtonSprite'].zIndex = 10;
         ctnrLi['aNextButtonSprite'].visible = true;
@@ -122,8 +122,8 @@ function readStep(){
         ctnrLi['aNextButtonSprite'].visible = false;
         //todo回答欄→csvから読み取り→回答をランダムに配置して、各イベントを紐付け
         let answerList = [];
-        let okList = getCSVCellData(currentStep+1,6).replace(/"/g, '').split('/');
-        let ngList = getCSVCellData(currentStep+1,7).replace(/"/g, '').split('/')
+        let okList = getCSVCellData(currentStepIndex+1,6).replace(/"/g, '').split('/');
+        let ngList = getCSVCellData(currentStepIndex+1,7).replace(/"/g, '').split('/')
         for (let i=0; i<okList.length; i++) {
             answerList.push([Math.random(), 'ok', okList[i]]);
         }
@@ -166,12 +166,12 @@ function readStep(){
         }
     }
     //吹き出しの位置を語り手の頭上へ表示
-    ctnrLi['aCommentEdgeSprite'].x = characterArr[charImgList[getCSVCellData(currentStep+1,2)]].x -10;
+    ctnrLi['aCommentEdgeSprite'].x = characterArr[charImgList[getCSVCellData(currentStepIndex+1,2)]].x -10;
 
     //キャラ画像を感情IDに従って変更
-    setVisibleImg(charImgList[getCharImgFileName( getCSVCellData(currentStep+1,2).replace(/"/g, ''),getCSVCellData(currentStep+1,5).replace(/"/g, ''))]);
+    setVisibleImg(charImgList[getCharImgFileName( getCSVCellData(currentStepIndex+1,2).replace(/"/g, ''),getCSVCellData(currentStepIndex+1,5).replace(/"/g, ''))]);
     
-    currentStep ++;
+    currentStepIndex ++;
 }
 
 function anserOK(){ 
@@ -211,6 +211,20 @@ function tapNext(){
 
 function setScore(){
     ctnrLi['aScoreText'].text = 'スコア' + currentScore + '点';
+}
+
+function setStepData(){
+    //シナリオ,ステップ,キャラID,フレーズ日本語,フレーズ英語,反応,正解,選択肢
+    //1,1,A,"今日はいい天気だね","It's nice weather!","good",,,
+    let data = rsGetCSV.split("\n")[currentStepIndex].split(',');
+    stepData['scenario'] = data[0];
+    stepData['step'] = data[1];
+    stepData['char'] = data[2];
+    stepData['jp'] = data[3];
+    stepData['en'] = data[4];
+    stepData['reaction'] = data[5];
+    stepData['ok'] = data[6];
+    stepData['ng'] = data[7];
 }
 
 function clearAnswerList(){
