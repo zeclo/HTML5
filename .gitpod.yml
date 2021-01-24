@@ -10,3 +10,7 @@ ports:
 tasks:
   - init: echo 'init script' # runs during prebuild
     command: echo 'start script'
+
+vscode:
+  extensions:
+    - dendron.dendron-snippet-maker@0.1.6:w9702Zk+lNlWSwqiGt3stg==
