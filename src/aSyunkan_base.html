@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue TEST</title>
+<!-- Vue.js を読み込む -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<style type="text/css">
+    <!--
+        .site-header{
+            position: fixed;
+            background: blue;
+            width: 100%;
+        }
+        .boxContainer{
+            display: flex;
+        }
+    -->
+</style>
+</head>
+<body>
+
+<div id="app">
+    <div style="display:inline;">
+        <div style="border: 0px ; text-align: center;">
+            <label>瞬間英単語アプリ</label> 
+            <BR><BR>
+            <label>問題作成画面</label> 
+            <BR>
+        </div><BR>
+
+
+        <button v-on:click="dummyMethod">
+            ダミーボタン
+        </button>
+    </div>
+</div> 
+
+<script>
+var app = new Vue({
+    el: '#app',                        /* #ap1 要素に対して Vue を適用する */
+    data: {
+      sentence2: [],
+      items: [
+            { id: 1, name: '名詞' },
+            { id: 2, name: '副詞' },
+            { id: 3, name: '形容詞' },
+            { id: 4, name: '助動詞' },
+      ],
+
+    },
+    methods: {
+        dummyMethod() {
+            alert('列追加') 
+            // 変数の利用
+            this.sentence2.push(['','','']);
+        },
+    },
+    mounted() {
+      this.$nextTick(function () {
+      // ビュー全体がレンダリングされた後にのみ実行されるコード
+
+    
+      try{
+        
+        alert('mountedイベント処理終了');
+      } catch( e ) {
+          alert(e.message);
+          }
+      }
+    )
+}
+})
+</script>
+
+</body>
+</html>
