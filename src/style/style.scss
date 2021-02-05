@@ -1,0 +1,66 @@
+.sample {
+  //Comment ...
+  width: 400px;
+}
+
+//レイアウト調整時に利用。それ以外の時はコメントアウト
+div {border-style: groove;}
+
+.fRowNowrap {
+  display: flex;
+  flex-flow: row nowrap;
+  background-color: #F8D2CF; 
+  justify-content: center;
+}
+.fRowWrap {
+  display: flex;
+  flex-flow: row wrap;
+  background-color: #BEDBD9; 
+  justify-content: center;
+}
+.fColumnNowrap {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: #D6ECCB; 
+  justify-content: center;
+}
+// row（初期値）… 子要素を左から右に配置
+// row-reverse … 子要素を右から左に配置
+// column … 子要素を上から下に配置
+// column-reverse … 子要素を下から上に配置
+
+// nowrap（初期値）… 子要素を折り返しせず、一行に並べる
+// wrap … 子要素を折り返し、複数行に上から下へ並べる
+// wrap-reverse … 子要素を折り返し、複数行に下から上へ並べる
+
+/*!
+ <div .問題文エリア>
+                <div .問題文セレクトボックス>
+                    セレクトボックス + 表示ボタン</div>
+                <div .英文レコード>
+                    ブロック毎に表示。編集不可 + 戻るボタン</div>
+                <div .日本文レコード>
+                    ブロック毎に表示。編集不可</div>
+                </div>
+            <div .モデル単語エリア>
+                <div .選択単語エリア>
+                    <div .英単語>英単語</div>
+                    <div .日本語>日本語</div>
+                    <div .属性>選択した属性</div>
+                    </div>
+                </div>
+                <div .属性エリア>
+                    ここは属性チェックボックスが並ぶ</div>
+            <div .登録単語エリア>
+                <div .選択単語エリア>
+                    <div .英単語>英単語</div>
+                    <div .日本語>日本語</div>
+                    <div .属性>選択した属性</div>
+                    </div>
+                </div>
+                <div .属性エリア>
+                    ここは属性チェックボックスが並ぶ</div>
+            
+            <div .サンプル></div>
+
+*/
