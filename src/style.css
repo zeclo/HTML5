@@ -54,3 +54,15 @@ div {
             <div .サンプル></div>
 
 */
+input {
+  background: linear-gradient(to bottom, transparent 92%, #1abc9c 8%) no-repeat;
+  background-position: -300px 0;
+  background-size: 300px 100%;
+  display: block;
+  width: 250px;
+  padding: 5px 0;
+  margin-top: 30px;
+  border: none;
+  border-bottom: solid 1px #1abc9c;
+  font-size: 15px;
+  transition: all 0.3s; }

@@ -1,411 +1,444 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>Vue TEST</title>
-<!-- Vue.js を読み込む -->
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<style type="text/css">
-    <!--
-        .site-header{
+    <meta charset="utf-8">
+    <title>Vue TEST</title>
+    <!-- Vue.js を読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+        <!--
+        .site-header {
             position: fixed;
             background: blue;
             width: 100%;
         }
-        .boxContainer{
+
+        .boxContainer {
             display: flex;
         }
-    -->
-</style>
-<link rel="stylesheet" href="style.css">
+        -->
+    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="app">
-    <div style="display:inline;">
-        <div style="border: 0px ; text-align: center;">
-            <label>瞬間英作文アプリ</label> 
-            <BR><BR>
-            <label>単語登録画面</label> 
-            <BR>
-            <div class="fColumnNowrap">
-                ★問題文エリア
-                <div  class="fRowNowrap">
-                    問題文セレクトボックス + 表示ボタン</div>
-                <div class="fRowNowrap">
-                    英文レコード ブロック毎に表示。編集不可 + 戻るボタン</div>
-                <div class="fRowNowrap">
-                    日本文レコード ブロック毎に表示。編集不可</div>
-            </div>
-            <br>
-            <div class="fRowNowrap">
-                ★モデル単語エリア
+    <div id="app">
+        <div style="display:inline;">
+            <div style="border: 0px ; text-align: center;">
+                <label>瞬間英作文アプリ</label>
+                <BR><BR>
+                <label>単語登録画面</label>
+                <BR>
                 <div class="fColumnNowrap">
-                    ★単語エリア
-                    <div >英単語</div>
-                    <div >日本語</div>
-                    <div >選択した属性</div>
+                    ★問題文エリア
+                    <div class="fRowNowrap">
+                        <select v-model="selectedQ">
+                            <option disabled value="">選択して下さい</option>
+                            <option v-for="option in questions" v-bind:value="option.id" v-bind:key="option.id">
+                                {{ option.name }}
+                            </option>
+                        </select>
+                        <p>{{ selectedQ }}</p>
+                        <button v-on:click="selectedQClick('引数です')">選択</button>
+                    </div>
+                    <div class="fRowNowrap">
+                        todo 編集不可にする
+                        <template v-for="(word, idx) in enWordArr" :key="idx">
+                            <input v-model="word" v-on:click="debugAlert(word)"
+                                v-bind:style="{backgroundColor:enPairingColorArr[idx]}" readonly><BR>
+                            <template v-if="idx !== enWordArr.length-1">
+                                <p>+</p>
+                            </template>
+                        </template>
+                        <button v-on:click="selectedQClick('引数です')">問題選択へ戻る</button>
+                    </div>
+                    <div class="fRowNowrap">
+                        日本文レコード ブロック毎に表示。編集不可</div>
                 </div>
-                <div class="fRowWrap">
-                    ここは属性チェックボックスが並ぶ
+                <br>
+                <div class="fRowNowrap">
+                    ★モデル単語エリア
+                    <div class="fColumnNowrap">
+                        ★単語エリア
+                        <div>英単語</div>
+                        <div>日本語</div>
+                        <div>選択した属性</div>
+                    </div>
+                    <div class="fRowWrap">
+                        ここは属性チェックボックスが並ぶ
+                    </div>
                 </div>
-            </div>
-            <br>
-            <div class="fRowNowrap">
-                ★登録単語エリア
-                <div class="fColumnNowrap">
-                    ★単語エリア
-                    <div >英単語</div>
-                    <div >日本語</div>
-                    <div >選択した属性</div>
+                <br>
+                <div class="fRowNowrap">
+                    ★登録単語エリア
+                    <div class="fColumnNowrap">
+                        ★単語エリア
+                        <div>英単語</div>
+                        <div>日本語</div>
+                        <div>選択した属性</div>
+                    </div>
+                    <div class="fRowWrap">
+                        属性エリア ここは属性チェックボックスが並ぶ
+                    </div>
                 </div>
-                <div class="fRowWrap">
-                    属性エリア ここは属性チェックボックスが並ぶ
-                </div>
-            </div>
-            <br>
-       
+                <br>
 
 
-            <input v-model="en" placeholder="英語"><BR>
-            <div style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-                <button v-on:click="splitEnSentece">
-                    英文をスペースで分割
+
+                <input v-model="en" placeholder="英語"><BR>
+                <div
+                    style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                    <button v-on:click="splitEnSentece">
+                        英文をスペースで分割
+                    </button><BR>
+                    <template v-for="(word, idx) in enWordArr" :key="idx">
+                        <input v-model="word" v-on:click="clickWord(langEN, idx)"
+                            v-bind:style="{backgroundColor:enPairingColorArr[idx]}"><BR>
+                        <template v-if="idx !== enWordArr.length-1">
+                            <p>+</p>
+                        </template>
+                    </template>
+                </div>
+
+                <input v-model="jp" placeholder="日本語"><BR>
+                <div
+                    style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                    <button v-on:click="splitJpSentece">
+                        日本文をスペースで分割
+                    </button>
+                    <template v-for="(word, idx) in jpWordArr" :key="idx">
+                        <input v-model="word" v-on:click="clickWord(langJP, idx)"
+                            v-bind:style="{backgroundColor:jpPairingColorArr[idx]}"><BR>
+                        <template v-if="idx !== jpWordArr.length-1">
+                            <p v-on:click="clickPlus(idx)">+</p>
+                        </template>
+                    </template>
+                </div>
+                <button v-on:click="generateSaveData">
+                    保存用の英文と日本文を作成
                 </button><BR>
-                <template v-for="(word, idx) in enWordArr" :key="idx">
-                    <input v-model="word" v-on:click="clickWord(langEN, idx)" v-bind:style="{backgroundColor:enPairingColorArr[idx]}"><BR>
-                    <template v-if="idx !== enWordArr.length-1">
-                        <p>+</p>
-                    </template>
-                </template>
-            </div>
-
-            <input v-model="jp" placeholder="日本語"><BR>
-            <div style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-                <button v-on:click="splitJpSentece">
-                    日本文をスペースで分割
-                </button>
-                <template v-for="(word, idx) in jpWordArr" :key="idx">
-                    <input v-model="word" v-on:click="clickWord(langJP, idx)" v-bind:style="{backgroundColor:jpPairingColorArr[idx]}"><BR>
-                    <template v-if="idx !== jpWordArr.length-1">
-                        <p v-on:click="clickPlus(idx)">+</p>
-                    </template>
-                </template>
-            </div>
-            <button v-on:click="generateSaveData">
-                保存用の英文と日本文を作成
-            </button><BR>
-            <p>{{enOutSentence}}</p>
-            <p>{{jpOutSentence}}</p>
-        </div><BR>
+                <p>{{enOutSentence}}</p>
+                <p>{{jpOutSentence}}</p>
+            </div><BR>
 
 
-        
+
+        </div>
     </div>
-</div> 
 
-<script>
-var app = new Vue({
-    el: '#app',                        /* #ap1 要素に対して Vue を適用する */
-    data: {
-      jp: '',
-      en: '',
-      redd: ['red','blue'],
-      jpWordArr: [],
-      enWordArr: [],
-      jpPairingArr: [],
-      enPairingArr: [],
-      jpPairingColorArr: [],
-      enPairingColorArr: [],
-      langJP: 'jp',
-      langEN: 'en',
-      jpOut: [],
-      enOut: [],
-      jpOutSentence: '',
-      enOutSentence: '',
-    },
-    methods: {
-        splitEnSentece(){
-            let tempWordArr = this.en.replace(/　/g, " ").split(' ');
-            this.enWordArr.length = 0;
-            this.enPairingArr.length = 0;
-            this.enPairingColorArr.length = 0;
-            // 分割した配列毎に文字前後のスペース(半角、全角)を取り除く
-            for (let i=0; i < tempWordArr.length; i++) {
-                tempWordArr[i] = tempWordArr[i].replace(/ /g, "").replace(/　/g, "");
-                if(tempWordArr[i].length > 0) {
-                    this.enWordArr.push(tempWordArr[i]);
-                    this.enPairingArr.push(0);
-                    this.enPairingColorArr.push('white');
-                }  
-            }
-        },
-        splitJpSentece() {
-            // alert('日本語を分割') 
-            let tempWordArr = this.jp.replace(/　/g, " ").split(' ');
-            this.jpWordArr.length = 0;
-            this.jpPairingArr.length = 0;
-            this.jpPairingColorArr.length = 0;
-            // 分割した配列毎に文字前後のスペース(半角、全角)を取り除く
-            for (let i=0; i < tempWordArr.length; i++) {
-                tempWordArr[i] = tempWordArr[i].replace(/ /g, "").replace(/　/g, "");
-                if(tempWordArr[i].length > 0) {
-                    this.jpWordArr.push(tempWordArr[i]);
-                    this.jpPairingArr.push(0);
-                    this.jpPairingColorArr.push('white');
-                }  
-            }
-            // alert('日本語を分割の完了') 
-        },
-        clickPlus(index) {
-            alert('clickPlus開始' + index) 
-            let tempJP = '';
-            for (let i=0; i < this.jpWordArr.length; i++) {
-                tempJP = tempJP + this.jpWordArr[i];
-                if(i != this.jpWordArr.length - 1){
-                    // クリックされた+の箇所は/付加をスキップ
-                    if(i　!=　index){
-                        tempJP = tempJP + '/';
-                    }
-                }
-            }
-            this.jp = tempJP;
-            this.splitJpSentece();
-        },
-        clickWord(lang,index){
-            try{
-            // alert('clickWord開始' + this.enPairingArr + '★★' + this.jpPairingArr);
-            if(lang === this.langEN){
-                // alert('clickWord  ★isPairing(enPairingArr,index)前');
-                if(this.isPairing(this.enPairingArr,index)){
-                    // ペアリング解除(英、index) → インデックスの値を取る。反対側のリストのその値を解除する
-                    // alert('clickWord  ★.disairing(lang, index);前');
-                    this.disairing(lang, index);
-                }
-                // 赤を付ける(英、インデックス)
-                // alert('clickWord  ★setPairing(enPairingArr,index);前');
-                this.setPairing(this.enPairingArr,index);
-            } else {
-                // alert('clickWord  ★isPairing(jpPairingArr,index)前');
-                if(this.isPairing(this.jpPairingArr,index)){
-                    // ペアリング解除(日、index)
-                    // alert('clickWord  ★.disairing(lang, index);前');
-                    this.disairing(lang, index);
-                }
-                // 赤を付ける(日、インデックス)
-                // alert('clickWord  ★setPairing(jpPairingArr,index)前');
-                this.setPairing(this.jpPairingArr,index)
-            }
-            // いづれも赤がついている→ペアリングセット
-            // alert('clickWord  ★doPairing前');
-            this.doPairing();
-            // alert('clickWord終了' + this.enPairingArr + '★★' + this.jpPairingArr);
+    <script>
+        var app = new Vue({
+            el: '#app',                        /* #ap1 要素に対して Vue を適用する */
+            data: {
+                selectedQ: '',
+                questions: [
+                    { id: 1, name: '問題１' },
+                    { id: 2, name: '問題２' },
+                    { id: 3, name: '問題３' },
+                ],
+                enWordArr: ['i','have','a','pen'],
 
-            } catch (error) {
-                alert(error);
-            }
-        },
-        isPairing(list, index){
-            if(list[index] > 1){
-                return true;
-            }
-            return false;
-        },
-        disairing(langType, index){
-            let targetPairID = 0;
-            if(langType === this.langEN){
-                targetPairID = this.enPairingArr[index];
-                this.enPairingArr[index] = 0;
-                for(let i=0; i < this.jpPairingArr.length; i++){
-                    if(this.jpPairingArr[i] === targetPairID){
-                        this.jpPairingArr[i] = 0;
+
+                jp: '',
+                en: '',
+                redd: ['red', 'blue'],
+                jpWordArr: [],
+                // enWordArr: [],
+                jpPairingArr: [],
+                enPairingArr: [],
+                jpPairingColorArr: [],
+                enPairingColorArr: [],
+                langJP: 'jp',
+                langEN: 'en',
+                jpOut: [],
+                enOut: [],
+                jpOutSentence: '',
+                enOutSentence: '',
+            },
+            methods: {
+                debugAlert(param){
+                    alert('デバッグアラート：' + param);
+                },
+                splitEnSentece() {
+                    let tempWordArr = this.en.replace(/　/g, " ").split(' ');
+                    this.enWordArr.length = 0;
+                    this.enPairingArr.length = 0;
+                    this.enPairingColorArr.length = 0;
+                    // 分割した配列毎に文字前後のスペース(半角、全角)を取り除く
+                    for (let i = 0; i < tempWordArr.length; i++) {
+                        tempWordArr[i] = tempWordArr[i].replace(/ /g, "").replace(/　/g, "");
+                        if (tempWordArr[i].length > 0) {
+                            this.enWordArr.push(tempWordArr[i]);
+                            this.enPairingArr.push(0);
+                            this.enPairingColorArr.push('white');
+                        }
                     }
-                }
-            } else {
-                targetPairID = this.jpPairingArr[index];
-                this.jpPairingArr[index] = 0;
-                for(let i=0; i < this.enPairingArr.length; i++){
-                    if(this.enPairingArr[i] === targetPairID){
-                        this.enPairingArr[i] = 0;
+                },
+                splitJpSentece() {
+                    // alert('日本語を分割') 
+                    let tempWordArr = this.jp.replace(/　/g, " ").split(' ');
+                    this.jpWordArr.length = 0;
+                    this.jpPairingArr.length = 0;
+                    this.jpPairingColorArr.length = 0;
+                    // 分割した配列毎に文字前後のスペース(半角、全角)を取り除く
+                    for (let i = 0; i < tempWordArr.length; i++) {
+                        tempWordArr[i] = tempWordArr[i].replace(/ /g, "").replace(/　/g, "");
+                        if (tempWordArr[i].length > 0) {
+                            this.jpWordArr.push(tempWordArr[i]);
+                            this.jpPairingArr.push(0);
+                            this.jpPairingColorArr.push('white');
+                        }
                     }
-                }
-            }
-        },
-        setPairing(list, index){
-            for(let i=0; i<list.length; i++){
-                if(i === index){
-                    if(list[i]  === 1){
-                        list[i] = 0;
+                    // alert('日本語を分割の完了') 
+                },
+                clickPlus(index) {
+                    alert('clickPlus開始' + index)
+                    let tempJP = '';
+                    for (let i = 0; i < this.jpWordArr.length; i++) {
+                        tempJP = tempJP + this.jpWordArr[i];
+                        if (i != this.jpWordArr.length - 1) {
+                            // クリックされた+の箇所は/付加をスキップ
+                            if (i != index) {
+                                tempJP = tempJP + '/';
+                            }
+                        }
+                    }
+                    this.jp = tempJP;
+                    this.splitJpSentece();
+                },
+                clickWord(lang, index) {
+                    try {
+                        // alert('clickWord開始' + this.enPairingArr + '★★' + this.jpPairingArr);
+                        if (lang === this.langEN) {
+                            // alert('clickWord  ★isPairing(enPairingArr,index)前');
+                            if (this.isPairing(this.enPairingArr, index)) {
+                                // ペアリング解除(英、index) → インデックスの値を取る。反対側のリストのその値を解除する
+                                // alert('clickWord  ★.disairing(lang, index);前');
+                                this.disairing(lang, index);
+                            }
+                            // 赤を付ける(英、インデックス)
+                            // alert('clickWord  ★setPairing(enPairingArr,index);前');
+                            this.setPairing(this.enPairingArr, index);
+                        } else {
+                            // alert('clickWord  ★isPairing(jpPairingArr,index)前');
+                            if (this.isPairing(this.jpPairingArr, index)) {
+                                // ペアリング解除(日、index)
+                                // alert('clickWord  ★.disairing(lang, index);前');
+                                this.disairing(lang, index);
+                            }
+                            // 赤を付ける(日、インデックス)
+                            // alert('clickWord  ★setPairing(jpPairingArr,index)前');
+                            this.setPairing(this.jpPairingArr, index)
+                        }
+                        // いづれも赤がついている→ペアリングセット
+                        // alert('clickWord  ★doPairing前');
+                        this.doPairing();
+                        // alert('clickWord終了' + this.enPairingArr + '★★' + this.jpPairingArr);
+
+                    } catch (error) {
+                        alert(error);
+                    }
+                },
+                isPairing(list, index) {
+                    if (list[index] > 1) {
+                        return true;
+                    }
+                    return false;
+                },
+                disairing(langType, index) {
+                    let targetPairID = 0;
+                    if (langType === this.langEN) {
+                        targetPairID = this.enPairingArr[index];
+                        this.enPairingArr[index] = 0;
+                        for (let i = 0; i < this.jpPairingArr.length; i++) {
+                            if (this.jpPairingArr[i] === targetPairID) {
+                                this.jpPairingArr[i] = 0;
+                            }
+                        }
                     } else {
-                        list[i] = 1;
+                        targetPairID = this.jpPairingArr[index];
+                        this.jpPairingArr[index] = 0;
+                        for (let i = 0; i < this.enPairingArr.length; i++) {
+                            if (this.enPairingArr[i] === targetPairID) {
+                                this.enPairingArr[i] = 0;
+                            }
+                        }
                     }
-                } else {
-                    if(list[i]  === 1){
-                        list[i] = 0;
+                },
+                setPairing(list, index) {
+                    for (let i = 0; i < list.length; i++) {
+                        if (i === index) {
+                            if (list[i] === 1) {
+                                list[i] = 0;
+                            } else {
+                                list[i] = 1;
+                            }
+                        } else {
+                            if (list[i] === 1) {
+                                list[i] = 0;
+                            }
+                        }
                     }
-                }
-            }
-        },
-        doPairing(){
-            // リストから値=1を探す。→反対側からも 値=1を探す。 両方あれば、最適なparingIDをセットする
-            let targetEnArrIndex = -1
-            let maxParingID = 0;
-            let targetJpArrIndex = -1
-            for(i=0; i<this.enPairingArr.length; i++){
-                if(this.enPairingArr[i] === 1){
-                    targetEnArrIndex = i;
-                }
-                if(this.enPairingArr[i] > maxParingID){
-                    maxParingID = this.enPairingArr[i];
-                }
-            }
-            for(i=0; i<this.jpPairingArr.length; i++){
-                if(this.jpPairingArr[i] === 1){
-                    targetJpArrIndex = i;
-                }
-            }
-            if(targetEnArrIndex > -1 && targetJpArrIndex > -1){
-                let setPairingID = this.getPairingID(maxParingID + 1);
-                
-                this.enPairingArr[targetEnArrIndex] = setPairingID;
-                this.jpPairingArr[targetJpArrIndex] = setPairingID;
-            }
-            this.syncIdToColor();
-        },
-        syncIdToColor(){
-            this.jpPairingColorArr.length = 0;
-            this.enPairingColorArr.length = 0;
-            for(let i=0; i<this.jpPairingArr.length; i++){
-                this.jpPairingColorArr.push('');
-                switch (this.jpPairingArr[i]){
-                    case 0:
-                    this.jpPairingColorArr[i] = 'white';
-                    break;
-                    case 1:
-                    this.jpPairingColorArr[i] = 'red';
-                    break;
-                    case 2:
-                    this.jpPairingColorArr[i] = 'blue';
-                    break;
-                    case 3:
-                    this.jpPairingColorArr[i] = 'green';
-                    break;
-                    case 4:
-                    this.jpPairingColorArr[i] = 'yellow';
-                    break;
-                    case 5:
-                    this.jpPairingColorArr[i] = 'olive';
-                    break;
-                    case 6:
-                    this.jpPairingColorArr[i] = 'purple';
-                    break;
-                    case 7:
-                    this.jpPairingColorArr[i] = 'maroon';
-                    break;
-                    case 8:
-                    this.jpPairingColorArr[i] = 'aqua';
-                    break;
-                    case 9:
-                    this.jpPairingColorArr[i] = 'teal';
-                    break;
-                }
-            }
-            for(let i=0; i<this.enPairingArr.length; i++){
-                this.enPairingColorArr.push('');
-                switch (this.enPairingArr[i]){
-                    case 0:
-                    this.enPairingColorArr[i] = 'white';
-                    break;
-                    case 1:
-                    this.enPairingColorArr[i] = 'red';
-                    break;
-                    case 2:
-                    this.enPairingColorArr[i] = 'blue';
-                    break;
-                    case 3:
-                    this.enPairingColorArr[i] = 'green';
-                    break;
-                    case 4:
-                    this.enPairingColorArr[i] = 'yellow';
-                    break;
-                    case 5:
-                    this.enPairingColorArr[i] = 'olive';
-                    break;
-                    case 6:
-                    this.enPairingColorArr[i] = 'purple';
-                    break;
-                    case 7:
-                    this.enPairingColorArr[i] = 'maroon';
-                    break;
-                    case 8:
-                    this.enPairingColorArr[i] = 'aqua';
-                    break;
-                    case 9:
-                    this.enPairingColorArr[i] = 'teal';
-                    break;
-                }
-            }
-
-        },
-        getPairingID(maxParingID){
-            for(let i=2; i<maxParingID; i++){
-                let hasTargetValue = false;
-                for(let j=0; j<this.enPairingArr.length; j++){
-                    if(this.enPairingArr[j] === i){
-                        hasTargetValue = true;
+                },
+                doPairing() {
+                    // リストから値=1を探す。→反対側からも 値=1を探す。 両方あれば、最適なparingIDをセットする
+                    let targetEnArrIndex = -1
+                    let maxParingID = 0;
+                    let targetJpArrIndex = -1
+                    for (i = 0; i < this.enPairingArr.length; i++) {
+                        if (this.enPairingArr[i] === 1) {
+                            targetEnArrIndex = i;
+                        }
+                        if (this.enPairingArr[i] > maxParingID) {
+                            maxParingID = this.enPairingArr[i];
+                        }
                     }
-                }
-                if(hasTargetValue === false){
-                    // alert('空き番を見つけました');
-                    return i;
-                }
-            }
-            // alert('最大値でいきましょう');
-            return maxParingID;
-        },
-        generateSaveData(){
-            //ペアリングIDの内容を文配列に代入する(条件も追加)
-            //ペアリング箇所に挿入する文字列の定義  ★★ + ID + ペアリングID + @ + 条件内容1 + @ + 条件内容2 + ☆☆
-            //文配列を/(スラッシュ)で結合
-            this.enOut.length = 0;
-            for (let i=0; i<this.enWordArr.length; i++){
-                if(this.enPairingArr[i] > 1){
-                    this.enOut[i]  = '★★' + 'ID' + this.enPairingArr[i] + '@' + '条件内容1' + '☆☆'
-                } else {
-                    this.enOut[i]  = this.enWordArr[i];
-                }
-            }
-            // alert('連結した文字列ですよ！  ' + this.enOut.join('/'));
-            this.enOutSentence = this.enOut.join('/');
+                    for (i = 0; i < this.jpPairingArr.length; i++) {
+                        if (this.jpPairingArr[i] === 1) {
+                            targetJpArrIndex = i;
+                        }
+                    }
+                    if (targetEnArrIndex > -1 && targetJpArrIndex > -1) {
+                        let setPairingID = this.getPairingID(maxParingID + 1);
 
-            this.jpOut.length = 0;
-            for (let i=0; i<this.jpWordArr.length; i++){
-                if(this.jpPairingArr[i] > 1){
-                    this.jpOut[i]  = '★★' + 'ID' + this.jpPairingArr[i] + '@' + '条件内容1' + '☆☆'
-                } else {
-                    this.jpOut[i]  = this.jpWordArr[i];
-                }
-            }
-            // alert('連結した文字列ですよ！  ' + this.jpOut.join('/'));
-            this.jpOutSentence = this.jpOut.join('/');
-        },
-    },
-    mounted() {
-      this.$nextTick(function () {
-      // ビュー全体がレンダリングされた後にのみ実行されるコード
+                        this.enPairingArr[targetEnArrIndex] = setPairingID;
+                        this.jpPairingArr[targetJpArrIndex] = setPairingID;
+                    }
+                    this.syncIdToColor();
+                },
+                syncIdToColor() {
+                    this.jpPairingColorArr.length = 0;
+                    this.enPairingColorArr.length = 0;
+                    for (let i = 0; i < this.jpPairingArr.length; i++) {
+                        this.jpPairingColorArr.push('');
+                        switch (this.jpPairingArr[i]) {
+                            case 0:
+                                this.jpPairingColorArr[i] = 'white';
+                                break;
+                            case 1:
+                                this.jpPairingColorArr[i] = 'red';
+                                break;
+                            case 2:
+                                this.jpPairingColorArr[i] = 'blue';
+                                break;
+                            case 3:
+                                this.jpPairingColorArr[i] = 'green';
+                                break;
+                            case 4:
+                                this.jpPairingColorArr[i] = 'yellow';
+                                break;
+                            case 5:
+                                this.jpPairingColorArr[i] = 'olive';
+                                break;
+                            case 6:
+                                this.jpPairingColorArr[i] = 'purple';
+                                break;
+                            case 7:
+                                this.jpPairingColorArr[i] = 'maroon';
+                                break;
+                            case 8:
+                                this.jpPairingColorArr[i] = 'aqua';
+                                break;
+                            case 9:
+                                this.jpPairingColorArr[i] = 'teal';
+                                break;
+                        }
+                    }
+                    for (let i = 0; i < this.enPairingArr.length; i++) {
+                        this.enPairingColorArr.push('');
+                        switch (this.enPairingArr[i]) {
+                            case 0:
+                                this.enPairingColorArr[i] = 'white';
+                                break;
+                            case 1:
+                                this.enPairingColorArr[i] = 'red';
+                                break;
+                            case 2:
+                                this.enPairingColorArr[i] = 'blue';
+                                break;
+                            case 3:
+                                this.enPairingColorArr[i] = 'green';
+                                break;
+                            case 4:
+                                this.enPairingColorArr[i] = 'yellow';
+                                break;
+                            case 5:
+                                this.enPairingColorArr[i] = 'olive';
+                                break;
+                            case 6:
+                                this.enPairingColorArr[i] = 'purple';
+                                break;
+                            case 7:
+                                this.enPairingColorArr[i] = 'maroon';
+                                break;
+                            case 8:
+                                this.enPairingColorArr[i] = 'aqua';
+                                break;
+                            case 9:
+                                this.enPairingColorArr[i] = 'teal';
+                                break;
+                        }
+                    }
 
-    
-      try{
-        
-        alert('mountedイベント処理終了');
-      } catch( e ) {
-          alert(e.message);
-          }
-      }
-    )
-}
-})
-</script>
+                },
+                getPairingID(maxParingID) {
+                    for (let i = 2; i < maxParingID; i++) {
+                        let hasTargetValue = false;
+                        for (let j = 0; j < this.enPairingArr.length; j++) {
+                            if (this.enPairingArr[j] === i) {
+                                hasTargetValue = true;
+                            }
+                        }
+                        if (hasTargetValue === false) {
+                            // alert('空き番を見つけました');
+                            return i;
+                        }
+                    }
+                    // alert('最大値でいきましょう');
+                    return maxParingID;
+                },
+                generateSaveData() {
+                    //ペアリングIDの内容を文配列に代入する(条件も追加)
+                    //ペアリング箇所に挿入する文字列の定義  ★★ + ID + ペアリングID + @ + 条件内容1 + @ + 条件内容2 + ☆☆
+                    //文配列を/(スラッシュ)で結合
+                    this.enOut.length = 0;
+                    for (let i = 0; i < this.enWordArr.length; i++) {
+                        if (this.enPairingArr[i] > 1) {
+                            this.enOut[i] = '★★' + 'ID' + this.enPairingArr[i] + '@' + '条件内容1' + '☆☆'
+                        } else {
+                            this.enOut[i] = this.enWordArr[i];
+                        }
+                    }
+                    // alert('連結した文字列ですよ！  ' + this.enOut.join('/'));
+                    this.enOutSentence = this.enOut.join('/');
+
+                    this.jpOut.length = 0;
+                    for (let i = 0; i < this.jpWordArr.length; i++) {
+                        if (this.jpPairingArr[i] > 1) {
+                            this.jpOut[i] = '★★' + 'ID' + this.jpPairingArr[i] + '@' + '条件内容1' + '☆☆'
+                        } else {
+                            this.jpOut[i] = this.jpWordArr[i];
+                        }
+                    }
+                    // alert('連結した文字列ですよ！  ' + this.jpOut.join('/'));
+                    this.jpOutSentence = this.jpOut.join('/');
+                },
+            },
+            mounted() {
+                this.$nextTick(function () {
+                    // ビュー全体がレンダリングされた後にのみ実行されるコー
+                    try {
+                        alert('mountedイベント処理終了');
+                    } catch (e) {
+                        alert(e.message);                    }
+                }
+                )
+            }
+        })
+    </script>
 
 </body>
+
 </html>
