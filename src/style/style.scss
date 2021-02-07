@@ -1,10 +1,21 @@
+// SCSSメンテナンス作業
+// コンパイル → npm run compile:scsss
+// コンパイル(圧縮) → npm run build
+// sassファイルの監視(自動コンパイル) → npm run watch
+// npmスクリプトは、package.jsonのscriptsで定義
+
+
 .sample {
   //Comment ...
   width: 400px;
 }
 
 //レイアウト調整時に利用。それ以外の時はコメントアウト
-div {border-style: groove;}
+div {
+    border-style: groove;
+    // display:inline; // noneで非表示。エリアは詰められる
+    // visibility:inline; // noneで非表示。エリアは詰められない
+}
 
 .fRowNowrap {
   display: flex;
@@ -33,40 +44,10 @@ div {border-style: groove;}
 // wrap … 子要素を折り返し、複数行に上から下へ並べる
 // wrap-reverse … 子要素を折り返し、複数行に下から上へ並べる
 
-/*!
- <div .問題文エリア>
-                <div .問題文セレクトボックス>
-                    セレクトボックス + 表示ボタン</div>
-                <div .英文レコード>
-                    ブロック毎に表示。編集不可 + 戻るボタン</div>
-                <div .日本文レコード>
-                    ブロック毎に表示。編集不可</div>
-                </div>
-            <div .モデル単語エリア>
-                <div .選択単語エリア>
-                    <div .英単語>英単語</div>
-                    <div .日本語>日本語</div>
-                    <div .属性>選択した属性</div>
-                    </div>
-                </div>
-                <div .属性エリア>
-                    ここは属性チェックボックスが並ぶ</div>
-            <div .登録単語エリア>
-                <div .選択単語エリア>
-                    <div .英単語>英単語</div>
-                    <div .日本語>日本語</div>
-                    <div .属性>選択した属性</div>
-                    </div>
-                </div>
-                <div .属性エリア>
-                    ここは属性チェックボックスが並ぶ</div>
-            
-            <div .サンプル></div>
-
-*/
 
 $color: #1abc9c;
 
+/*
 input {
   background: linear-gradient(to bottom, transparent 92%, $color 8%) no-repeat;
   background-position: -300px 0;
@@ -79,4 +60,6 @@ input {
   border-bottom: solid 1px $color;
   font-size: 15px;
   transition: all 0.3s;
+  text-align: center;
 }
+*/
