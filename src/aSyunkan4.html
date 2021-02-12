@@ -6,19 +6,6 @@
     <title>Vue TEST</title>
     <!-- Vue.js を読み込む -->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <style type="text/css">
-        <!--
-        .site-header {
-            position: fixed;
-            background: blue;
-            width: 100%;
-        }
-
-        .boxContainer {
-            display: flex;
-        }
-        -->
-    </style>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -27,6 +14,7 @@
     <div id="app">
         <div style="display:inline;">
             <div style="border: 0px ; text-align: center;">
+                <a href="aSyunkan3.html">英文登録ページへ</a><BR>
                 <label>瞬間英作文アプリ</label>
                 <BR><BR>
                 <label>単語登録画面</label>
@@ -36,7 +24,8 @@
                     <div class="fRowNowrap">
                         <select v-model="selectedQ">
                             <option disabled value="">選択して下さい</option>
-                            <option v-for="(option, index) in questions" v-bind:value="index" v-bind:key="option.id">
+                            <option v-for="(option, index) in questions" v-bind:value="index" 
+                                v-bind:key="option.id">
                                 {{ option.name }}
                             </option>
                         </select>
@@ -46,9 +35,13 @@
                 </div>
                 <div class="fColumnNowrap" v-bind:style="{display:areaQuestionDetail}">
                     <div class="fRowNowrap">
-                        英文レコード
+                        日本文レコード
+                        <input type="text" v-model="jpSentence" readonly><BR>
+                    </div>
+                    <div class="fRowNowrap">
+                        英単語レコード
                         <template v-for="(word, idx) in targetEnWordArr" :key="idx">
-                            <input v-model="word[0]" v-on:click="clickEnWord(idx)"
+                            <input type="text" v-model="word[0]" v-on:click="clickEnWord(idx)"
                                 v-bind:style="{backgroundColor:word[1]}" readonly><BR>
                             <template v-if="idx !== targetEnWordArr.length-1">
                                 <p>+</p>
@@ -57,9 +50,9 @@
                         <button v-on:click="clickBackToQSeclect()">問題選択へ戻る</button>
                     </div>
                     <div class="fRowNowrap">
-                        日本文レコード ブロック毎に表示。編集不可
+                        日本単語レコード
                         <template v-for="(word, idx) in targetJpWordArr" :key="idx">
-                            <input v-model="word[0]" v-on:click="clickJpWord(idx)"
+                            <input type="text" v-model="word[0]" v-on:click="clickJpWord(idx)"
                                 v-bind:style="{backgroundColor:word[1]}" readonly><BR>
                             <template v-if="idx !== targetJpWordArr.length-1">
                                 <p>+</p>
@@ -72,17 +65,15 @@
                     ★モデル単語エリア
                     <div class="fColumnNowrap">
                         ★単語エリア
-                        <div>英単語</div>
-                        <div>日本語</div>
-                        <div>選択した属性</div>
+                        <div>英単語<input type="text" v-model="modelEn" :style="{width:textWidth[0]+'px'}" readonly></div>
+                        <div>日本語<input type="text" v-model="modelJp"  readonly></div>
+                        <div>選択した属性<input type="text" v-model="modelAttribute"  readonly></div>
                     </div>
-                    <div class="fRowWrap">
+                    <div class="fRowWrap" >
                         ここは属性チェックボックスが並ぶ
                         <template v-for="(poke, i) in vals" :key="i">
-                            <div class="fRowNowrap">
-                                <label style="white-space: nowrap"><input :id="'poke.id' + i" type="checkbox"
-                                        :value="poke.name" v-model="checkedVal">{{poke.name}}</label>
-                            </div>
+                            <label style="white-space: nowrap"><input :id="'poke.id' + i" type="checkbox"
+                                    :value="poke.name" v-model="modelAttribute" disabled>{{poke.name}}</label>
                         </template>
                     </div>
 
@@ -92,12 +83,16 @@
                     ★登録単語エリア
                     <div class="fColumnNowrap">
                         ★単語エリア
-                        <div>英単語</div>
-                        <div>日本語</div>
-                        <div>選択した属性</div>
+                        <div>英単語<input type="text" v-model="inputEn" :style="{width:textWidth[1]+'px'}" ></div>
+                        <div>日本語<input type="text" v-model="inputJp"  ></div>
+                        <div>選択した属性<input type="text" v-model="inputAttribute"  ></div>
                     </div>
                     <div class="fRowWrap">
                         属性エリア ここは属性チェックボックスが並ぶ
+                        <template v-for="(poke, i) in vals" :key="i">
+                            <label style="white-space: nowrap"><input :id="'poke.id' + i" type="checkbox"
+                                    :value="poke.name" v-model="inputAttribute">{{poke.name}}</label>
+                        </template>
                     </div>
                 </div>
                 <div class="fRowNowrap" v-bind:style="{display:areaInput}">
@@ -120,7 +115,9 @@
 
                     enWordArr: ['i', 'have', 'a pen'],
                     jpWordArr: ['私は', 'ペン', 'を持っています。'],
-                    jpSortArr: [1, 3, 2],
+                    jpSortArr: [1, 3, 2, 4],
+                    jpSentence: '',
+
 
                     questions: [
                         {
@@ -131,8 +128,8 @@
                             jp: '日本文',
                             // enBlocks: ['i', 'have', 'a pen'],
                             // jpBlocks: ['私は', 'ペン', 'を持っています。'],
-                            enBlocks: ['i', '★★have@ID2@条件内容1☆☆', '★★a@ID3@条件内容1☆☆', 'pen'],
-                            jpBlocks: ['★★you@ID2@条件内容1☆☆', 'are', 'a', '★★lucky@ID3@条件内容1☆☆'],
+                            enBlocks: ['★★i@ID2@人-顔☆☆', 'have', '★★a pen@ID3@モノ-文具','.'],
+                            jpBlocks: ['★★私は@ID2@人-顔☆☆', 'を持っている', '★★ペン@ID3@モノ-文具☆☆','。'],
                             jpSort: [1, 3, 2],
                             attribute: ['食べ物', '人'],
                             theme: '問題のテーマ'
@@ -141,8 +138,13 @@
                         { id: 2, name: '問題２' },
                         { id: 3, name: '問題３' },
                     ],
+                    modelEn: '',
+                    modelJp: '',
+                    modelAttribute: [],
 
-
+                    inputEn: '',
+                    inputJp: '',
+                    inputAttribute: [],
 
                     targetEnWordArr: [],
                     targetJpWordArr: [],
@@ -151,6 +153,8 @@
                         { id: 1, name: "人" },
                         { id: 2, name: "食べ物" },
                         { id: 3, name: "場所" },
+                        { id: 4, name: "モノ" },
+                        { id: 5, name: "文具" },
                     ],
                     checkedVal: ['人'],
 
@@ -159,7 +163,9 @@
 
 
 
-
+// xxxyz: String(this.modelEn.length * 100), // '1000',
+                    
+                    
                     jp: '',
                     en: '',
                     redd: ['red', 'blue'],
@@ -214,8 +220,8 @@
                         //this.targetEnWordArr = this.questions[Number(this.selectedQ)].enBlocks;
                         this.targetJpWordArr = this.questions[Number(this.selectedQ)].jpBlocks;
 
-                        // enBlocks: ['i','★★have@ID2@条件内容1☆☆','★★a@ID3@条件内容1☆☆','pen'],
-                        // jpBlocks: ['★★you@ID2@条件内容1☆☆','are','a','★★lucky@ID3@条件内容1☆☆'],
+                        // enBlocks: ['i','★★have@ID2@人-顔☆☆','★★a@ID3@条件内容1☆☆','pen'],
+                        // jpBlocks: ['★★you@ID2@人-顔1☆☆','are','a','★★lucky@ID3@条件内容1☆☆'],
                         // 空の配列を作る
                         // 空の配列に、値、条件ID、条件内容
                         let enArr = [];
@@ -246,17 +252,45 @@
                         // alert(jpArr);
                         this.targetJpWordArr = jpArr;
 
-
+                        //jpSentenceに日本語をセット
+                        let tempArr = [];
+                        for(let i=0; i<this.targetJpWordArr.length; i++){
+                            tempArr.push([this.jpSortArr[i],this.targetJpWordArr[i][0]]);
+                        }
+                        tempArr.sort(function(a,b){return(a[0] - b[0]);});
+                        // alert(tempArr);
+                        for(let i=0; i<tempArr.length; i++){
+                            this.jpSentence = this.jpSentence + tempArr[i][1];
+                        }
+                        
                         this.setActiveLayout('clickSelectQ');
                     },
                     clickBackToQSeclect() {
                         this.setActiveLayout('clickBackToQSeclect');
                     },
-                    clickEnWord() {
-                        this.setActiveLayout('clickWord');
+                    clickEnWord(idx) {
+                        if(this.targetEnWordArr[idx][2] != ''){
+                            // alert(this.targetEnWordArr[idx])
+                            let enArr = this.targetEnWordArr[idx];
+                            let jpArr = this.targetJpWordArr[idx];
+                            this.modelEn = enArr[0];
+                            this.modelJp = jpArr[0];
+                            this.modelAttribute = enArr[2].split('-');
+
+                            this.inputAttribute = enArr[2].split('-');
+
+                            //属性一覧を配列にセットし、選択した単語の属性をチェックにする
+                            this.checkedVal = []//単語の属性をセット
+
+
+                            this.setActiveLayout('clickWord');
+                        }
                     },
-                    clickJpWord() {
-                        this.setActiveLayout('clickWord');
+                    clickJpWord(idx) {
+                        if(this.targetJpWordArr[idx][2] != ''){
+                            // alert(this.targetJpWordArr[idx])
+                            this.setActiveLayout('clickWord');
+                        }
                     },
                     registWord() {
                         alert('ok');
@@ -572,6 +606,15 @@
                         }
                         // alert('連結した文字列ですよ！  ' + this.jpOut.join('/'));
                         this.jpOutSentence = this.jpOut.join('/');
+                    },
+                },
+                computed: {
+                    textWidth: function () {
+                        let arr = [];
+                        arr.push(this.modelEn.length * 10 + 10);
+                        arr.push(this.inputEn.length * 10 + 10);
+
+                        return arr; // String(this.modelEn.length * 10 + 10)
                     },
                 },
                 mounted() {

@@ -17,6 +17,11 @@ div {
     // visibility:inline; // noneで非表示。エリアは詰められない
 }
 
+//一部のタグに適用させる→属性を指定する
+input[type="text"] , input[type="mail"]{
+	 width:200px;
+}
+
 .fRowNowrap {
   display: flex;
   flex-flow: row nowrap;
