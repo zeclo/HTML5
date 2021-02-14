@@ -18,34 +18,36 @@
                 <BR><BR>
                 <label>問題作成画面</label>
                 <BR>
-                <input v-model="en" placeholder="英語"><BR>
-                <div
-                    style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                <input class="inputText" v-model="en" placeholder="英語"><BR>
+                <div class="fColumnNowrap">
                     <button v-on:click="splitEnSentece">
                         英文をスペースで分割
                     </button><BR>
-                    <template v-for="(word, idx) in enWordArr" :key="idx">
-                        <input v-model="word" v-on:click="clickWord(langEN, idx)"
-                            v-bind:style="{backgroundColor:enPairingColorArr[idx]}"><BR>
-                        <template v-if="idx !== enWordArr.length-1">
-                            <p>+</p>
+                    <div class="fRowNowrap">
+                        <template v-for="(word, idx) in enWordArr" :key="idx">
+                            <input class="inputText" v-model="word" v-on:click="clickWord(langEN, idx)"
+                                v-bind:style="{backgroundColor:enPairingColorArr[idx], width:enWordWidthArr[idx] + 'px'}"><BR>
+                            <template v-if="idx !== enWordArr.length-1">
+                                <p>+</p>
+                            </template>
                         </template>
-                    </template>
+                    </div>
                 </div>
 
-                <input v-model="jp" placeholder="日本語"><BR>
-                <div
-                    style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                <input class="inputText" v-model="jp" placeholder="日本語"><BR>
+                <div class="fColumnNowrap">
                     <button v-on:click="splitJpSentece">
                         日本文をスペースで分割
                     </button>
-                    <template v-for="(word, idx) in jpWordArr" :key="idx">
-                        <input v-model="word" v-on:click="clickWord(langJP, idx)"
-                            v-bind:style="{backgroundColor:jpPairingColorArr[idx]}"><BR>
-                        <template v-if="idx !== jpWordArr.length-1">
-                            <p v-on:click="clickPlus(idx)">+</p>
+                    <div class="fRowNowrap">
+                        <template v-for="(word, idx) in jpWordArr" :key="idx">
+                            <input class="inputText" v-model="word" v-on:click="clickWord(langJP, idx)"
+                                v-bind:style="{backgroundColor:jpPairingColorArr[idx], width:jpWordWidthArr[idx] + 'px'}"><BR>
+                            <template v-if="idx !== jpWordArr.length-1">
+                                <p v-on:click="clickPlus(idx)">+</p>
+                            </template>
                         </template>
-                    </template>
+                    </div>
                 </div>
                 <button v-on:click="generateSaveData">
                     保存用の英文と日本文を作成
@@ -55,11 +57,11 @@
 
                 <template v-for="(attribute, idx) in attributeArr" :key="idx">
                     <template v-if="attribute[0]">
-                        <div class="fRowNoWrap">
+                        <div class="fRowNowrap" style="justify-content:'start'">
                             <button v-on:click="clickOpenAttribute(idx)">
-                                ペアリング{{idx+1}}
+                                単語属性設定 【{{enWordArr[idx]}}】
                             </button>
-                            <div class="fRowNoWrap" v-show="isOpenAttributeArr[idx] === true">
+                            <div class="fRowNowrap" v-show="isOpenAttributeArr[idx] === true">
                                 <div class="fColumnNoWrap">
                                     <p>英語：　{{enWordArr[idx]}}</p>
                                     <p>日本語：　{{jpWordArr[idx]}}</p>
@@ -425,35 +427,51 @@
                     }
                     this.jpOutSentence = this.jpOut.join('/');
 
-                    // question
                     this.areaTextarea = true;
                     // ★ここで表示用のJSONを作成
                     let questions = [];
                     questions.push({
-                            id: 3,
-                            templateID: 'temp1',
-                            name: '問題１だよ',
-                            en: '英文',
-                            jp: '日本文',
-                            enBlocks: this.enOut,
-                            jpBlocks: this.jpOut,
-                            jpSort: [1, 3, 2],
-                            attribute: ['食べ物', '人'],
-                            theme: '問題のテーマ'
-                        });
+                        id: 3,
+                        templateID: 'temp1',
+                        name: '問題１だよ',
+                        en: '英文',
+                        jp: '日本文',
+                        enBlocks: this.enOut,
+                        jpBlocks: this.jpOut,
+                        jpSort: [1, 3, 2],
+                        attribute: ['食べ物', '人'],
+                        theme: '問題のテーマ'
+                    });
 
-                    let json_text = JSON.stringify(questions);
+                    let json_text = JSON.stringify(questions[0]);
+                    this.question = json_text;
                     alert(json_text);
                     // alert('保存ボタン完了');
                 },
-                getAttribute(ID){
-                    for(let i=0; i<this.enPairingArr.length; i++){
-                        if(this.enPairingArr[i] === ID){
+                getAttribute(ID) {
+                    for (let i = 0; i < this.enPairingArr.length; i++) {
+                        if (this.enPairingArr[i] === ID) {
                             return this.attributeArr2[i].join('-');
                         }
                     }
                     alert('Error form getAttribute' + 'ID:' + ID);
                     return 'Error form getAttribute'
+                },
+            },
+            computed: {
+                enWordWidthArr: function () {
+                    let arr = [];
+                    for (let i = 0; i < this.enWordArr.length; i++) {
+                        arr.push(this.enWordArr[i].length * 10 + 10);
+                    }
+                    return arr; // String(this.modelEn.length * 10 + 10)
+                },
+                jpWordWidthArr: function () {
+                    let arr = [];
+                    for (let i = 0; i < this.jpWordArr.length; i++) {
+                        arr.push(this.jpWordArr[i].length * 10 + 10);
+                    }
+                    return arr; // String(this.modelEn.length * 10 + 10)
                 },
             },
             mounted() {

@@ -1,5 +1,5 @@
 // SCSSメンテナンス作業
-// コンパイル → npm run compile:scsss
+// コンパイル → npm run compile:sass
 // コンパイル(圧縮) → npm run build
 // sassファイルの監視(自動コンパイル) → npm run watch
 // npmスクリプトは、package.jsonのscriptsで定義
@@ -17,24 +17,29 @@ div {
     // visibility:inline; // noneで非表示。エリアは詰められない
 }
 
-//一部のタグに適用させる→属性を指定する
-input[type="text"] , input[type="mail"]{
-	 width:200px;
+.inputText {
+    text-align : center ;
 }
 
-.fRowNowrap {
+//一部のタグに適用させる→属性を指定する
+input[type="text"] , input[type="mail"]{
+     // width:200px;
+     text-align : center ;
+}
+
+.fRowNowrap {  //横置き折返しなし
   display: flex;
   flex-flow: row nowrap;
   background-color: #F8D2CF; 
   justify-content: center;
 }
-.fRowWrap {
+.fRowWrap {  //横置き折返し
   display: flex;
   flex-flow: row wrap;
   background-color: #BEDBD9; 
   justify-content: center;
 }
-.fColumnNowrap {
+.fColumnNowrap {  //縦置き折返しなし
   display: flex;
   flex-flow: column nowrap;
   background-color: #D6ECCB; 

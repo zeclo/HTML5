@@ -4,8 +4,11 @@
 div {
   border-style: groove; }
 
+.inputText {
+  text-align: center; }
+
 input[type="text"], input[type="mail"] {
-  width: 200px; }
+  text-align: center; }
 
 .fRowNowrap {
   display: flex;
