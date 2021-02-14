@@ -1,214 +1,219 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>Vue TEST</title>
-<!-- Vue.js を読み込む -->
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<style type="text/css">
-    <!--
-        .site-header{
+    <meta charset="utf-8">
+    <title>Vue TEST</title>
+    <!-- Vue.js を読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+        <!--
+        .site-header {
             position: fixed;
             background: blue;
             width: 100%;
         }
-        .boxContainer{
+
+        .boxContainer {
             display: flex;
         }
-    -->
-</style>
+        -->
+    </style>
 </head>
+
 <body>
 
-<div id="app">
-    <div style="display:inline;">
-        <div style="border: 0px ; text-align: center;">
-            <label>瞬間英単語アプリ</label> 
-            <BR><BR><BR>
-            <label>問題「{{questions[0][3]}}」</label> 
-            <BR>
-        </div><BR>
-        <div style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-            <template v-for="(word, idx) in questions[0][2]" :key="idx">
-                <div style="border: 0px double; border-color: red;">
-                    <div style="text-align: center;">
-                        <label >{{word[2]}}</label>
+    <div id="app">
+        <div style="display:inline;">
+            <div style="border: 0px ; text-align: center;">
+                <label>瞬間英単語アプリ</label>
+                <BR><BR><BR>
+                <label>問題「{{questions[0][3]}}」</label>
+                <BR>
+            </div><BR>
+            <div
+                style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                <template v-for="(word, idx) in questions[0][2]" :key="idx">
+                    <div style="border: 0px double; border-color: red;">
+                        <div style="text-align: center;">
+                            <label>{{word[2]}}</label>
+                        </div>
+                        <div style="border: 5px solid; border-color: red;">
+                        </div>
+                        <div style="text-align: center;">
+                            <label>{{word[1]}}</label>
+                        </div>
                     </div>
-                    <div style="border: 5px solid; border-color: red;">
+                    <div style="border: 10px double white; ">
                     </div>
-                    <div style="text-align: center;">
-                        <label >{{word[1]}}</label>
-                    </div>
-                </div>
-                <div style="border: 10px double white; ">
-                </div>  
-            </template>
+                </template>
+            </div>
         </div>
-    </div>
-</div>  <!-- {{ message }} が Vueデータに置換される -->
+    </div> <!-- {{ message }} が Vueデータに置換される -->
 
-<script>
-var app = new Vue({
-    el: '#app',                        /* #ap1 要素に対して Vue を適用する */
-    data: {
-      //　変数
-      //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
-      //　　問題[タイプ,意訳順序,利用単語[]]
-      //　　問題リスト[問題,…]
-      questions: [],
-      words: [],
-      message: 'Hello world!',
-      items: [        { name: '7602', checked: false },
-        { name: '1844', checked: false },
-      ],
-      result: '',
-    },
-    methods: {
-        myClick(item, event) {
-        },
-        clicked() {
-            alert('テキストコピー開始')
-            alert(this.questions)
-           
-        },
-        searchWord(condition) {
-          //alert('searchWord開始')
-          let　conditionArr = condition.split('-')
-          let targetKeyWordArr = [];
+    <script>
+        var app = new Vue({
+            el: '#app',                        /* #ap1 要素に対して Vue を適用する */
+            data: {
+                //　変数
+                //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
+                //　　問題[タイプ,意訳順序,利用単語[]]
+                //　　問題リスト[問題,…]
+                questions: [],
+                words: [],
+                message: 'Hello world!',
+                items: [{ name: '7602', checked: false },
+                { name: '1844', checked: false },
+                ],
+                result: '',
+            },
+            methods: {
+                myClick(item, event) {
+                },
+                clicked() {
+                    alert('テキストコピー開始')
+                    alert(this.questions)
 
-          for (let row = 0; row < this.words.length; row++) {
-            switch (conditionArr[0]){
-            case '固定':
-                if(conditionArr[1] == this.words[row][1]){
-                    return this.words[row];
-                }
-                break;
-            case '品詞':
-                //品詞-キーワード-キーワード2… とWordの品詞を利用
-                //alert('品詞処理開始')
-                //キーワード数でforを回す
-                let isUnhit = false;
-                for(let i=1; i<conditionArr.length; i++){
-                    //全部合致していたら新設した配列にindexを追加
-                    if(String('-' + this.words[row][0] +'-'+ this.words[row][4] +'-').indexOf('-'+conditionArr[i]+'-') == -1){
-                        isUnhit = true;
+                },
+                searchWord(condition) {
+                    //alert('searchWord開始')
+                    let conditionArr = condition.split('-')
+                    let targetKeyWordArr = [];
+
+                    for (let row = 0; row < this.words.length; row++) {
+                        switch (conditionArr[0]) {
+                            case '固定':
+                                if (conditionArr[1] == this.words[row][1]) {
+                                    return this.words[row];
+                                }
+                                break;
+                            case '品詞':
+                                //品詞-キーワード-キーワード2… とWordの品詞を利用
+                                //alert('品詞処理開始')
+                                //キーワード数でforを回す
+                                let isUnhit = false;
+                                for (let i = 1; i < conditionArr.length; i++) {
+                                    //全部合致していたら新設した配列にindexを追加
+                                    if (String('-' + this.words[row][0] + '-' + this.words[row][4] + '-').indexOf('-' + conditionArr[i] + '-') == -1) {
+                                        isUnhit = true;
+                                    }
+                                }
+                                if (isUnhit == false) {
+                                    targetKeyWordArr.push(this.words[row])
+                                }
+
+                                break;
+                            default:
+                                alert('住所はその他です');
+                        }
+                    }
+                    if (targetKeyWordArr.length > 0) {
+                        //alert('配列入った！')
+                        //alert(targetKeyWordArr)
+                        return targetKeyWordArr[(Math.floor(Math.random() * targetKeyWordArr.length))];
+                    }
+                    alert('searchWord終了(該当項目が得られなかった)')
+                    return 'callFromMouted呼ばれたよーー'
+                },
+                createJpQuestion(question) {
+                    //alert('createOutputData開始')
+                    let jpQuestion = '';
+                    let sortOrderArr = [];
+                    sortOrderArr = question[1].split('-');
+                    for (let i = 0; i < sortOrderArr.length; i++) {
+                        let targetJp = question[2][Number(sortOrderArr[i].substr(0, 2)) - 1][2];
+                        switch (sortOrderArr[i].length) {
+                            case 2:
+                                jpQuestion = jpQuestion + targetJp;
+                                break;
+                            case 4:
+                                jpQuestion = jpQuestion + targetJp.split(' ')[Number(sortOrderArr[i].substr(2, 2)) - 1];
+                                break;
+                            default:
+                                alert('配置順序に想定外の値が入っている');
+                        }
+                    }
+                    //alert(jpQuestion);
+                    return jpQuestion
+                },
+            },
+            mounted() {
+                this.$nextTick(function () {
+                    // ビュー全体がレンダリングされた後にのみ実行されるコード
+
+                    //　変数
+                    //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
+                    //　　問題[タイプ,意訳順序,利用単語[]]
+                    //　　問題リスト[問題,…]
+                    alert('mountedイベント処理開始');
+                    //単語データのセット
+                    let word = [];
+                    word = ['タイプ(固定文字、属性)', '英単語', '日本語(直訳)', '日本語(意訳)', '品詞'];
+                    this.words.push(word);
+                    word = ['タイプ(固定文字、属性)２', '英単語２', '日本語(直訳)２', '日本語(意訳)２', '品詞２'];
+                    this.words.push(word);
+
+                    word = ['タイプ(固定文字、属性)２', 'I am not', '私は ではない', '日本語(意訳)２', '品詞２'];
+                    this.words.push(word);
+                    word = ['人間のキャラ', 'a morning person', '朝型人間', '日本語(意訳)２', '名詞'];
+                    this.words.push(word);
+                    word = ['人間のキャラ-変な日本語', 'a noon person', '昼型人間', '日本語(意訳)２', '名詞'];
+                    this.words.push(word);
+                    word = ['人間のキャラ', 'a night person', '夜型人間', '日本語(意訳)２', '名詞'];
+                    this.words.push(word);
+                    word = ['タイプ(固定文字、属性)２', '.', '。', '日本語(意訳)２', '品詞２'];
+                    this.words.push(word);
+
+                    //alert('this.words' + this.words);
+                    //構文のセット
+                    let question = [];
+                    question.push('タイプ');
+                    question.push('0101-02-0102-03');
+                    question.push([]); // sentence
+                    question.push([]); // JpQuestion
+                    question.push('固定-I am not');
+                    question.push('品詞-名詞-人間のキャラ');
+                    question.push('固定-.');
+
+                    let question2 = [];
+                    question2.push('タイプ2');
+                    question2.push('0101-02-0102-03');
+                    question2.push([]); // sentence
+                    question2.push([]); // JpQuestion
+                    question2.push('固定-I am not');
+                    question2.push('固定-a morning person');
+                    question2.push('固定-.');
+
+                    try {
+                        let sentence = [];
+                        for (let i = 4; i < question.length; i++) {
+                            sentence.push(this.searchWord(question[i]));
+                        }
+                        question[2] = sentence;
+                        question[3] = this.createJpQuestion(question);
+
+                        let sentence2 = [];
+                        for (let i = 4; i < question2.length; i++) {
+                            sentence2.push(this.searchWord(question2[i]));
+                        }
+                        question2[2] = sentence2;
+                        question2[3] = this.createJpQuestion(question2);
+
+
+                        //末尾のピリオドは自動補正しよう
+                        this.questions.push(question);
+                        this.questions.push(question2);
+                        //alert('questionの中身' + this.questions[0]);
+                        alert('mountedイベント処理終了');
+                    } catch (e) {
+                        alert(e.message);
                     }
                 }
-                if(isUnhit == false){
-                    targetKeyWordArr.push(this.words[row])
-                }
-            
-                break;
-            default:
-                alert('住所はその他です');
+                )
             }
-          }
-          if(targetKeyWordArr.length > 0){
-              //alert('配列入った！')
-              //alert(targetKeyWordArr)
-              return targetKeyWordArr[(Math.floor(Math.random() * targetKeyWordArr.length))];
-          }
-          alert('searchWord終了(該当項目が得られなかった)')
-          return 'callFromMouted呼ばれたよーー'
-        },
-        createJpQuestion(question) {
-          //alert('createOutputData開始')
-          let jpQuestion = '';
-          let sortOrderArr = [];
-          sortOrderArr = question[1].split('-');
-          for(let i=0; i < sortOrderArr.length; i++){
-              let targetJp = question[2][Number(sortOrderArr[i].substr(0,2))-1][2];
-              switch (sortOrderArr[i].length){
-                case 2:
-                   jpQuestion = jpQuestion + targetJp;
-                    break;
-                case 4:
-                    jpQuestion = jpQuestion + targetJp.split(' ')[Number(sortOrderArr[i].substr(2,2))-1];
-                    break;
-                default:
-                    alert('配置順序に想定外の値が入っている');
-                }
-          }
-          //alert(jpQuestion);
-          return jpQuestion
-        },
-    },
-    mounted() {
-      this.$nextTick(function () {
-      // ビュー全体がレンダリングされた後にのみ実行されるコード
-      
-      //　変数
-      //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
-      //　　問題[タイプ,意訳順序,利用単語[]]
-      //　　問題リスト[問題,…]
-      alert('mountedイベント処理開始');
-      //単語データのセット
-      let word = [];
-      word = ['タイプ(固定文字、属性)','英単語','日本語(直訳)','日本語(意訳)','品詞'];
-      this.words.push(word);
-      word = ['タイプ(固定文字、属性)２','英単語２','日本語(直訳)２','日本語(意訳)２','品詞２'];
-      this.words.push(word);
-      
-      word = ['タイプ(固定文字、属性)２','I am not','私は ではない','日本語(意訳)２','品詞２'];
-      this.words.push(word);
-      word = ['人間のキャラ','a morning person','朝型人間','日本語(意訳)２','名詞'];
-      this.words.push(word);
-      word = ['人間のキャラ-変な日本語','a noon person','昼型人間','日本語(意訳)２','名詞'];
-      this.words.push(word);
-      word = ['人間のキャラ','a night person','夜型人間','日本語(意訳)２','名詞'];
-      this.words.push(word);
-      word = ['タイプ(固定文字、属性)２','.','。','日本語(意訳)２','品詞２'];
-      this.words.push(word);
-      
-      //alert('this.words' + this.words);
-      //構文のセット
-      let question = [];
-      question.push('タイプ');
-      question.push('0101-02-0102-03');
-      question.push([]); // sentence
-      question.push([]); // JpQuestion
-      question.push('固定-I am not');
-      question.push('品詞-名詞-人間のキャラ');
-      question.push('固定-.');
-
-      let question2 = [];
-      question2.push('タイプ2');
-      question2.push('0101-02-0102-03');
-      question2.push([]); // sentence
-      question2.push([]); // JpQuestion
-      question2.push('固定-I am not');
-      question2.push('固定-a morning person');
-      question2.push('固定-.');
-      
-      try{
-        let sentence = [];
-        for (let i = 4; i < question.length; i++) {
-            sentence.push(this.searchWord(question[i]));
-        }
-        question[2] = sentence;
-        question[3] = this.createJpQuestion(question);
-
-        let sentence2 = [];
-        for (let i = 4; i < question2.length; i++) {
-            sentence2.push(this.searchWord(question2[i]));
-        }
-        question2[2] = sentence2;
-        question2[3] = this.createJpQuestion(question2);
-
-
-        //末尾のピリオドは自動補正しよう
-        this.questions.push(question);
-        this.questions.push(question2);
-        //alert('questionの中身' + this.questions[0]);
-        alert('mountedイベント処理終了');
-      } catch( e ) {
-          alert(e.message);
-          }
-      }
-    )
-}
-})
-</script>
+        })
+    </script>
 
 </body>
+
 </html>

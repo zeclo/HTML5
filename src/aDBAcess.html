@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Vue TEST</title>
+    <!-- Vue.js を読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src=" https://cdn.jsdelivr.net/npm/jsstore/dist/jsstore.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <div style="display:inline;">
+            <h4>We have included JsStore in this html code.</h4>
+            <button v-on:click="initJsStore()">ボタン押す</button>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',                        /* #ap1 要素に対して Vue を適用する */
+            data: {
+                jp: '私は ペン を持っています 。',
+                dbName: 'JsStore_Demo',
+                db: {
+                    name: '',
+                    tables: []
+                },
+                tblProduct: '',
+                connection: new JsStore.Connection(new Worker('jsstore.worker.js')),
+
+            },
+            methods: {
+                abc() {
+                    alert('あああ');
+                },
+                init() {
+                    this.db.name = this.dbName;
+                    this.db.tables = this.tblProduct;
+                },
+                getDbSchema() {
+                    this.tblProduct = {
+                        name: 'Product',
+                        columns: {
+                            // Here "Id" is name of column 
+                            id: { primaryKey: true, autoIncrement: true },
+                            itemName: { notNull: true, dataType: "string" },
+                            price: { notNull: true, dataType: "number" },
+                            quantity: { notNull: true, dataType: "number" }
+                        }
+                    };
+                    return this.db;
+                },
+                async initJsStore() {
+                    alert("メソッド突入");
+                    try {
+                        let database = this.getDbSchema();
+                        const isDbCreated = this.connection.initDb(database);
+                        alert("メソッド突入２");
+                        if (isDbCreated === true) {
+                            alert("db created");
+                            // here you can prefill database with some data
+                        }
+                        else {
+                            alert("db opened");
+
+                            let value = {
+                                itemName: 'Blue Jeans',
+                                price: 2000,
+                                quantity: 1000
+                            };
+
+                            let noOfDataInserted = this.connection.insert({
+                                into: 'Product',
+                                values: [value]
+                            });
+                            if (noOfDataInserted > 0) {
+                                alert('successfully added');
+                            }
+                            alert(noOfDataInserted)
+                        }
+                    } catch (e) {
+                        alert(e);
+                    }
+                    alert("メソッド終了");
+                },
+            },
+            mounted() {
+                this.$nextTick(function () {
+                    // ビュー全体がレンダリングされた後にのみ実行されるコード
+                    try {
+                        this.init();
+                        alert('mountedイベント処理終了');
+                    } catch (e) {
+                        alert(e.message);
+                    }
+                }
+                )
+            }
+        })
+    </script>
+</body>
+
+</html>

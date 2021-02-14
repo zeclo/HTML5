@@ -1,236 +1,241 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>Vue TEST</title>
-<!-- Vue.js を読み込む -->
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<style type="text/css">
-    <!--
-        .site-header{
+    <meta charset="utf-8">
+    <title>Vue TEST</title>
+    <!-- Vue.js を読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+        <!--
+        .site-header {
             position: fixed;
             background: blue;
             width: 100%;
         }
-        .boxContainer{
+
+        .boxContainer {
             display: flex;
         }
-    -->
-</style>
+        -->
+    </style>
 </head>
+
 <body>
 
-<div id="app">
-    <div style="display:inline;">
-        <div style="border: 0px ; text-align: center;">
-            <label>瞬間英単語アプリ</label> 
-            <BR><BR>
-            <label>問題作成画面</label> 
-            <BR>
-        </div><BR>
-        <div style="display:flex; justify-content: center;">
-            <button v-on:click="addColum">単語を追加</button>
-        </div>
-        <div style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
-            <template v-for="(word, idx) in sentence2" :key="idx">
-                <div style="border: 3px double; border-color: red;">
-                    <input v-model="word[0]" placeholder="英語"><BR>
-                    <input v-model="word[1]" placeholder="日本語"><BR>
-                    <input v-model="word[5]" placeholder="日本語の順番(番号2桁、枝番2桁)"><BR>
-                    <input type="radio" id="fix" value="fix" v-model="word[2]">
-                    <label for="fix">固定</label>
-                    <BR>
-                    <input type="radio" id="condition" value="condition" v-model="word[2]">
-                    <label for="condition">品詞</label>
-                    <template v-if="word[2] === 'condition'">
-                        <select v-model="word[3]">
-                            <option v-for="item in items" v-bind:value="item.name">
-                                {{ item.name }}
-                            </option>
-                        </select>
-                    </template>
-                    <BR>
-                    <label >属性</label>
-                    <textarea v-model="word[4]">
+    <div id="app">
+        <div style="display:inline;">
+            <div style="border: 0px ; text-align: center;">
+                <label>瞬間英単語アプリ</label>
+                <BR><BR>
+                <label>問題作成画面</label>
+                <BR>
+            </div><BR>
+            <div style="display:flex; justify-content: center;">
+                <button v-on:click="addColum">単語を追加</button>
+            </div>
+            <div
+                style="display:flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                <template v-for="(word, idx) in sentence2" :key="idx">
+                    <div style="border: 3px double; border-color: red;">
+                        <input v-model="word[0]" placeholder="英語"><BR>
+                        <input v-model="word[1]" placeholder="日本語"><BR>
+                        <input v-model="word[5]" placeholder="日本語の順番(番号2桁、枝番2桁)"><BR>
+                        <input type="radio" id="fix" value="fix" v-model="word[2]">
+                        <label for="fix">固定</label>
+                        <BR>
+                        <input type="radio" id="condition" value="condition" v-model="word[2]">
+                        <label for="condition">品詞</label>
+                        <template v-if="word[2] === 'condition'">
+                            <select v-model="word[3]">
+                                <option v-for="item in items" v-bind:value="item.name">
+                                    {{ item.name }}
+                                </option>
+                            </select>
+                        </template>
+                        <BR>
+                        <label>属性</label>
+                        <textarea v-model="word[4]">
                     </textarea>
-                </div>
-            </template>
+                    </div>
+                </template>
+            </div>
+            <button v-on:click="downloadCSV">
+                ダウンロード
+            </button>
+            <button v-on:click="createAlert">
+                CSVファイルの中身をアラート出力
+            </button>
         </div>
-        <button v-on:click="downloadCSV">
-            ダウンロード
-        </button>
-        <button v-on:click="createAlert">
-            CSVファイルの中身をアラート出力
-        </button>
     </div>
-</div> 
 
-<script>
-var app = new Vue({
-    el: '#app',                        /* #ap1 要素に対して Vue を適用する */
-    data: {
-      sentence2: [],
-      items: [
-            { id: 1, name: '名詞' },
-            { id: 2, name: '副詞' },
-            { id: 3, name: '形容詞' },
-            { id: 4, name: '助動詞' },
-      ],
+    <script>
+        var app = new Vue({
+            el: '#app',                        /* #ap1 要素に対して Vue を適用する */
+            data: {
+                sentence2: [],
+                items: [
+                    { id: 1, name: '名詞' },
+                    { id: 2, name: '副詞' },
+                    { id: 3, name: '形容詞' },
+                    { id: 4, name: '助動詞' },
+                ],
 
-    
-      //　変数
-      //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
-      //　　問題[タイプ,意訳順序,利用単語[]]
-      //　　問題リスト[問題,…]
-      questions: [],
-      words: [],
-      message: 'Hello world!',
-      result: '',
-    },
-    methods: {
-        addColum() {
-            alert('列追加') 
-            this.sentence2.push(['','','']);
-        },
-        downloadCSV () {
-            let bom  = new Uint8Array([0xEF, 0xBB, 0xBF]);
-            var csv = '品名,価格\n'
-            // this.items.forEach(el => {
-            //     var line = el['name'] + ',' + el['price'] + '\n'
-            //     csv += line
-            // })
-            let blob = new Blob([bom, csv], { type: 'text/csv' })
-            let link = document.createElement('a')
-            link.href = window.URL.createObjectURL(blob)
-            link.download = 'Template.csv'
-            link.click()
-        },
-        createAlert () {
-            if( this.isFitInputRule() ){
-                
-                
-                
-                
-                
-                alert(this.sentence2);
-            }
-            
-        },
-        isFitInputRule () {
-            //画面で入力されたデータの整合性をチェック
-            return true;
-        },
 
+                //　変数
+                //　　利用単語[タイプ(固定文字、属性)、英単語、日本語(直訳)、日本語(意訳)、品詞]
+                //　　問題[タイプ,意訳順序,利用単語[]]
+                //　　問題リスト[問題,…]
+                questions: [],
+                words: [],
+                message: 'Hello world!',
+                result: '',
+            },
+            methods: {
+                addColum() {
+                    alert('列追加')
+                    this.sentence2.push(['', '', '']);
+                },
+                downloadCSV() {
+                    let bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+                    var csv = '品名,価格\n'
+                    // this.items.forEach(el => {
+                    //     var line = el['name'] + ',' + el['price'] + '\n'
+                    //     csv += line
+                    // })
+                    let blob = new Blob([bom, csv], { type: 'text/csv' })
+                    let link = document.createElement('a')
+                    link.href = window.URL.createObjectURL(blob)
+                    link.download = 'Template.csv'
+                    link.click()
+                },
+                createAlert() {
+                    if (this.isFitInputRule()) {
+
+
+
+
+
+                        alert(this.sentence2);
+                    }
+
+                },
+                isFitInputRule() {
+                    //画面で入力されたデータの整合性をチェック
+                    return true;
+                },
 
 
 
 
 
 
-        myClick(item, event) {
-        },
-        clicked() {
-            alert('テキストコピー開始')
-            alert(this.questions)
-        },
-        searchWord(condition) {
-          //alert('searchWord開始')
-          let　conditionArr = condition.split('-')
-          let targetKeyWordArr = [];
 
-          for (let row = 0; row < this.words.length; row++) {
-            switch (conditionArr[0]){
-            case '固定':
-                if(conditionArr[1] == this.words[row][1]){
-                    return this.words[row];
-                }
-                break;
-            case '品詞':
-                //品詞-キーワード-キーワード2… とWordの品詞を利用
-                //alert('品詞処理開始')
-                //キーワード数でforを回す
-                let isUnhit = false;
-                for(let i=1; i<conditionArr.length; i++){
-                    //全部合致していたら新設した配列にindexを追加
-                    if(String('-' + this.words[row][0] +'-'+ this.words[row][4] +'-').indexOf('-'+conditionArr[i]+'-') == -1){
-                        isUnhit = true;
+                myClick(item, event) {
+                },
+                clicked() {
+                    alert('テキストコピー開始')
+                    alert(this.questions)
+                },
+                searchWord(condition) {
+                    //alert('searchWord開始')
+                    let conditionArr = condition.split('-')
+                    let targetKeyWordArr = [];
+
+                    for (let row = 0; row < this.words.length; row++) {
+                        switch (conditionArr[0]) {
+                            case '固定':
+                                if (conditionArr[1] == this.words[row][1]) {
+                                    return this.words[row];
+                                }
+                                break;
+                            case '品詞':
+                                //品詞-キーワード-キーワード2… とWordの品詞を利用
+                                //alert('品詞処理開始')
+                                //キーワード数でforを回す
+                                let isUnhit = false;
+                                for (let i = 1; i < conditionArr.length; i++) {
+                                    //全部合致していたら新設した配列にindexを追加
+                                    if (String('-' + this.words[row][0] + '-' + this.words[row][4] + '-').indexOf('-' + conditionArr[i] + '-') == -1) {
+                                        isUnhit = true;
+                                    }
+                                }
+                                if (isUnhit == false) {
+                                    targetKeyWordArr.push(this.words[row])
+                                }
+
+                                break;
+                            default:
+                                alert('住所はその他です');
+                        }
+                    }
+                    if (targetKeyWordArr.length > 0) {
+                        //alert('配列入った！')
+                        //alert(targetKeyWordArr)
+                        return targetKeyWordArr[(Math.floor(Math.random() * targetKeyWordArr.length))];
+                    }
+                    alert('searchWord終了(該当項目が得られなかった)')
+                    return 'callFromMouted呼ばれたよーー'
+                },
+                createJpQuestion(question) {
+                    //alert('createOutputData開始')
+                    let jpQuestion = '';
+                    let sortOrderArr = [];
+                    sortOrderArr = question[1].split('-');
+                    for (let i = 0; i < sortOrderArr.length; i++) {
+                        let targetJp = question[2][Number(sortOrderArr[i].substr(0, 2)) - 1][2];
+                        switch (sortOrderArr[i].length) {
+                            case 2:
+                                jpQuestion = jpQuestion + targetJp;
+                                break;
+                            case 4:
+                                jpQuestion = jpQuestion + targetJp.split(' ')[Number(sortOrderArr[i].substr(2, 2)) - 1];
+                                break;
+                            default:
+                                alert('配置順序に想定外の値が入っている');
+                        }
+                    }
+                    //alert(jpQuestion);
+                    return jpQuestion
+                },
+            },
+            mounted() {
+                this.$nextTick(function () {
+                    // ビュー全体がレンダリングされた後にのみ実行されるコード
+
+                    let word = [];
+                    word.push('');
+                    word.push('');
+                    word.push('');
+                    word.push('');
+                    word.push('');
+                    word.push('');
+                    this.sentence2.push(word);
+
+                    let word3 = [];
+                    word3.push('');
+                    word3.push('');
+                    word3.push('');
+                    word3.push('');
+                    word3.push('');
+                    word3.push('');
+                    this.sentence2.push(word3);
+
+
+
+
+                    try {
+
+                        alert('mountedイベント処理終了');
+                    } catch (e) {
+                        alert(e.message);
                     }
                 }
-                if(isUnhit == false){
-                    targetKeyWordArr.push(this.words[row])
-                }
-            
-                break;
-            default:
-                alert('住所はその他です');
+                )
             }
-          }
-          if(targetKeyWordArr.length > 0){
-              //alert('配列入った！')
-              //alert(targetKeyWordArr)
-              return targetKeyWordArr[(Math.floor(Math.random() * targetKeyWordArr.length))];
-          }
-          alert('searchWord終了(該当項目が得られなかった)')
-          return 'callFromMouted呼ばれたよーー'
-        },
-        createJpQuestion(question) {
-          //alert('createOutputData開始')
-          let jpQuestion = '';
-          let sortOrderArr = [];
-          sortOrderArr = question[1].split('-');
-          for(let i=0; i < sortOrderArr.length; i++){
-              let targetJp = question[2][Number(sortOrderArr[i].substr(0,2))-1][2];
-              switch (sortOrderArr[i].length){
-                case 2:
-                   jpQuestion = jpQuestion + targetJp;
-                    break;
-                case 4:
-                    jpQuestion = jpQuestion + targetJp.split(' ')[Number(sortOrderArr[i].substr(2,2))-1];
-                    break;
-                default:
-                    alert('配置順序に想定外の値が入っている');
-                }
-          }
-          //alert(jpQuestion);
-          return jpQuestion
-        },
-    },
-    mounted() {
-      this.$nextTick(function () {
-      // ビュー全体がレンダリングされた後にのみ実行されるコード
-
-      let word = [];
-      word.push('');
-      word.push('');
-      word.push('');
-      word.push('');
-      word.push('');
-      word.push('');
-      this.sentence2.push(word);
-
-      let word3 = [];
-      word3.push('');
-      word3.push('');
-      word3.push('');
-      word3.push('');
-      word3.push('');
-      word3.push('');
-      this.sentence2.push(word3);
-      
-
-
-      
-      try{
-        
-        alert('mountedイベント処理終了');
-      } catch( e ) {
-          alert(e.message);
-          }
-      }
-    )
-}
-})
-</script>
+        })
+    </script>
 
 </body>
+
 </html>

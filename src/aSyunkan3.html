@@ -52,6 +52,7 @@
                 </button><BR>
                 <p>{{enOutSentence}}</p>
                 <p>{{jpOutSentence}}</p>
+
                 <template v-for="(attribute, idx) in attributeArr" :key="idx">
                     <template v-if="attribute[0]">
                         <div class="fRowNoWrap">
@@ -75,6 +76,13 @@
                         </div>
                     </template>
                 </template>
+                <br>
+                <button v-on:click="clickSaveButton">
+                    データの保存
+                </button>
+                <div class="fRowNoWrap" v-show="areaTextarea">
+                    <textarea v-model="question"></textarea>
+                </div>
             </div><BR>
         </div>
     </div>
@@ -85,7 +93,6 @@
             data: {
                 jp: '私は ペン を持っています 。',
                 en: 'I have a pen .',
-                redd: ['red', 'blue'],
                 jpWordArr: [],
                 enWordArr: [],
                 jpPairingArr: [],
@@ -108,6 +115,8 @@
                     { id: 5, name: "文具" },
                 ],
                 isOpenAttributeArr: [],
+                question: '',
+                areaTextarea: false,
             },
             methods: {
                 splitEnSentece() {
@@ -357,7 +366,7 @@
                     this.isOpenAttributeArr.length = 0;
                     for (let i = 0; i < this.enWordArr.length; i++) {
                         if (this.enPairingArr[i] > 1) {
-                            this.enOut[i] = '★★' + 'ID' + this.enPairingArr[i] + '@' + '条件内容1' + '☆☆'
+                            this.enOut[i] = '★★' + this.enWordArr[i] + '@ID' + this.enPairingArr[i] + '@' + '条件内容1' + '☆☆'
                             this.attributeArr[i] = [true, []];
                             this.attributeArr2[i] = [];
                         } else {
@@ -373,7 +382,7 @@
                     this.jpOut.length = 0;
                     for (let i = 0; i < this.jpWordArr.length; i++) {
                         if (this.jpPairingArr[i] > 1) {
-                            this.jpOut[i] = '★★' + 'ID' + this.jpPairingArr[i] + '@' + '条件内容1' + '☆☆'
+                            this.jpOut[i] = '★★' + this.jpWordArr[i] + '@ID' + this.jpPairingArr[i] + '@' + '条件内容1' + '☆☆'
                         } else {
                             this.jpOut[i] = this.jpWordArr[i];
                         }
@@ -394,6 +403,57 @@
                         }
                     }
                     this.isOpenAttributeArr.splice();  // この処理を入れると画面の再描画が行われる
+                },
+                clickSaveButton() {
+                    this.enOut.length = 0;
+                    for (let i = 0; i < this.enWordArr.length; i++) {
+                        if (this.enPairingArr[i] > 1) {
+                            this.enOut[i] = '★★' + this.enWordArr[i] + '@ID' + this.enPairingArr[i] + '@' + this.attributeArr2[i].join('-') + '☆☆'
+                        } else {
+                            this.enOut[i] = this.enWordArr[i];
+                        }
+                    }
+                    this.enOutSentence = this.enOut.join('/');
+
+                    this.jpOut.length = 0;
+                    for (let i = 0; i < this.jpWordArr.length; i++) {
+                        if (this.jpPairingArr[i] > 1) {
+                            this.jpOut[i] = '★★' + 'ID' + this.jpPairingArr[i] + '@' + this.getAttribute(this.jpPairingArr[i]) + '☆☆'
+                        } else {
+                            this.jpOut[i] = this.jpWordArr[i];
+                        }
+                    }
+                    this.jpOutSentence = this.jpOut.join('/');
+
+                    // question
+                    this.areaTextarea = true;
+                    // ★ここで表示用のJSONを作成
+                    let questions = [];
+                    questions.push({
+                            id: 3,
+                            templateID: 'temp1',
+                            name: '問題１だよ',
+                            en: '英文',
+                            jp: '日本文',
+                            enBlocks: this.enOut,
+                            jpBlocks: this.jpOut,
+                            jpSort: [1, 3, 2],
+                            attribute: ['食べ物', '人'],
+                            theme: '問題のテーマ'
+                        });
+
+                    let json_text = JSON.stringify(questions);
+                    alert(json_text);
+                    // alert('保存ボタン完了');
+                },
+                getAttribute(ID){
+                    for(let i=0; i<this.enPairingArr.length; i++){
+                        if(this.enPairingArr[i] === ID){
+                            return this.attributeArr2[i].join('-');
+                        }
+                    }
+                    alert('Error form getAttribute' + 'ID:' + ID);
+                    return 'Error form getAttribute'
                 },
             },
             mounted() {
